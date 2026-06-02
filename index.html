@@ -733,11 +733,11 @@
         const minutes = now.getMinutes();
         const currentTime = hours + minutes / 60;
         let isOnline = true;
-        // OFFLINE jam 02:00 - 06:00
-        if (currentTime >= 2.0 && currentTime < 6.0) isOnline = false;
+        // OFFLINE jam 00:00 - 06:00
+        if (currentTime >= 0.0 && currentTime < 6.0) isOnline = false;
         const adminStatusSpan = document.getElementById("adminStatusText");
         if (adminStatusSpan) {
-            adminStatusSpan.innerHTML = isOnline ? "🟢 ONLINE (18:00 - 02:00)" : "🔴 OFFLINE (02:00 - 06:00)";
+            adminStatusSpan.innerHTML = isOnline ? "🟢 ONLINE (18:00 - 00:00)" : "🔴 OFFLINE (00:00 - 06:00)";
             adminStatusSpan.className = isOnline ? "status-online" : "status-offline";
         }
     }
