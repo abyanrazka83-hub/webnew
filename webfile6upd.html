@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>YANZXITER | Web</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        body {
+            font-family: 'Inter', 'Poppins', sans-serif;
+            min-height: 100vh;
+            color: white;
+            overflow-x: hidden;
+            background: radial-gradient(circle at 10% 20%, #0b0e16, #03050a);
+        }
+
+        /* VIDEO BACKGROUND */
+        #bgVideo {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .video-fallback {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 10% 20%, #0b0e16, #03050a);
+            z-index: -2;
+        }
+
+        .content-overlay {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* SOUND CONTROL - GLASS */
+        .sound-control {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 50px;
+            padding: 12px 18px;
+            cursor: pointer;
+            z-index: 1001;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            color: white;
+        }
+        .sound-control:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: scale(1.02);
+        }
+
+        /* LOADING SCREEN */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(2, 4, 8, 0.85);
+            backdrop-filter: blur(4px);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            transition: opacity 0.6s ease;
+        }
+        .loading-screen.hide {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+        .loading-logo {
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: white;
+            animation: glowPulse 1.2s infinite alternate;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+        }
+        @keyframes glowPulse {
+            0% { text-shadow: 0 0 2px rgba(255,255,255,0.3); }
+            100% { text-shadow: 0 0 25px rgba(255,255,255,0.6), 0 0 10px rgba(255,255,255,0.4); }
+        }
+        .loading-spinner {
+            width: 55px;
+            height: 55px;
+            border: 3px solid rgba(255, 255, 255, 0.15);
+            border-top: 3px solid #ffffff;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 20px 0;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        .app-main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1.2rem 1rem 2rem;
+            display: none;
+            animation: fadeInUp 0.7s ease-out;
+        }
+        .app-main.show { display: block; }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* HERO GLASS TRANSPARAN */
+        .hero-glow {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(16px);
+            border-radius: 2rem;
+            padding: 1.8rem 1.5rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            animation: floatGlow 3s infinite ease-in-out;
+        }
+        @keyframes floatGlow {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-3px); }
+            100% { transform: translateY(0px); }
+        }
+        .hero-glow h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ffffff, #dddddd);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .badge-ob53 {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(4px);
+            display: inline-block;
+            padding: 0.4rem 1.2rem;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            margin: 12px 0 8px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+        .contact-row {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-top: 0.5rem;
+        }
+        .contact-badge {
+            padding: 8px 18px;
+            border-radius: 60px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.85rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.2s;
+            backdrop-filter: blur(8px);
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+        .contact-badge.tele:hover, .contact-badge.whatsapp:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.05);
+        }
+
+        /* VISITOR PANEL GLASS */
+        .visitor-panel {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(12px);
+            border-radius: 1.5rem;
+            padding: 1rem 1.5rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .visitor-stats { display: flex; gap: 25px; flex-wrap: wrap; }
+        .stat-card {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 8px 20px;
+            border-radius: 50px;
+            backdrop-filter: blur(4px);
+        }
+        .stat-card i { font-size: 1.3rem; color: #ffffff; margin-right: 8px; opacity: 0.8; }
+        .stat-card span { font-size: 1.5rem; font-weight: bold; color: #ffffff; }
+        .stat-card small { font-size: 0.7rem; display: block; color: rgba(255,255,255,0.6); }
+        .stat-card.total-neon {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: neonPulse 1.5s infinite alternate;
+        }
+        @keyframes neonPulse {
+            0% { box-shadow: 0 0 5px rgba(255,255,255,0.2); border-color: rgba(255,255,255,0.15); }
+            100% { box-shadow: 0 0 15px rgba(255,255,255,0.4); border-color: rgba(255,255,255,0.4); }
+        }
+        .btn-buy-now {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 12px 28px;
+            border-radius: 50px;
+            font-weight: 800;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: white;
+        }
+        .btn-buy-now:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: scale(1.02);
+        }
+
+        /* Tombol Penjelasan - GLASS MERAH */
+        .btn-explanation {
+            background: rgba(255, 80, 80, 0.2);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 100, 100, 0.3);
+            padding: 14px 28px;
+            border-radius: 60px;
+            font-weight: 800;
+            font-size: 1rem;
+            cursor: pointer;
+            margin: 0 auto 1.8rem auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            width: fit-content;
+            color: white;
+            transition: all 0.3s ease;
+        }
+        .btn-explanation:hover {
+            background: rgba(255, 80, 80, 0.35);
+            transform: scale(1.02);
+        }
+
+        /* KATEGORI GLASS */
+        .category-card {
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(12px);
+            border-radius: 1.5rem;
+            margin-bottom: 1.25rem;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            overflow: hidden;
+            transition: 0.25s;
+        }
+        .category-card:hover {
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+        .category-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            cursor: pointer;
+        }
+        .cat-title { font-weight: 700; font-size: 1.2rem; display: flex; align-items: center; gap: 12px; color: white; }
+        .cat-title i { color: rgba(255,255,255,0.8); }
+        .category-products {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.55s cubic-bezier(0.33, 1, 0.68, 1);
+            padding: 0 1rem;
+        }
+        .category-products.open {
+            max-height: 2000px;
+            padding: 0.8rem 1rem 1.2rem;
+        }
+        .product-list { display: flex; flex-direction: column; gap: 12px; }
+        .product-item {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(4px);
+            border-radius: 1rem;
+            padding: 0.8rem 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+            border-left: 2px solid rgba(255, 255, 255, 0.3);
+            transition: 0.2s;
+        }
+        .product-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: scale(0.99);
+        }
+        .product-name { font-weight: 500; font-size: 0.88rem; display: flex; gap: 8px; color: white; }
+        .product-price {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 4px 12px;
+            border-radius: 30px;
+            color: rgba(255,255,255,0.9);
+            font-weight: bold;
+        }
+        .btn-buy {
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 6px 20px;
+            border-radius: 40px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: white;
+        }
+        .btn-buy:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: scale(1.02);
+        }
+
+        /* PENJELASAN GLASS */
+        .explanation-section {
+            margin-top: 2.5rem;
+            border-radius: 1.5rem;
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(8px);
+            padding: 1.2rem 1rem;
+        }
+        .explain-card {
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(4px);
+            border-left: 3px solid rgba(255, 80, 80, 0.6);
+            border-radius: 1rem;
+            padding: 1rem 1.2rem;
+            margin-bottom: 1rem;
+            transition: 0.2s;
+            cursor: pointer;
+        }
+        .explain-card:hover {
+            transform: translateX(5px);
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .explain-title { font-size: 1rem; font-weight: 700; color: rgba(255,255,255,0.9); margin-bottom: 0.4rem; }
+        .explain-desc { font-size: 0.85rem; line-height: 1.45; color: rgba(255,255,255,0.7); }
+
+        /* MODAL GLASS */
+        .modal-payment {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(20px);
+            display: flex; align-items: center; justify-content: center;
+            z-index: 2000; visibility: hidden; opacity: 0; transition: 0.2s;
+        }
+        .modal-payment.active { visibility: visible; opacity: 1; }
+        .modal-card {
+            background: rgba(20, 20, 35, 0.6);
+            backdrop-filter: blur(20px);
+            border-radius: 1.5rem;
+            max-width: 460px;
+            width: 90%;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            text-align: center;
+        }
+        .dana-box { background: rgba(255, 255, 255, 0.05); border-radius: 1rem; padding: 1rem; margin: 1rem 0; }
+        .nomor-dana { font-size: 1.3rem; font-weight: 800; background: rgba(255, 255, 255, 0.1); display: inline-block; padding: 6px 16px; border-radius: 50px; }
+        .input-group input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 60px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.08);
+            color: white;
+        }
+        .btn-neon {
+            text-decoration: none;
+            padding: 12px 20px;
+            border-radius: 60px;
+            font-weight: bold;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin: 5px;
+            transition: 0.2s;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+        .btn-neon.disabled {
+            opacity: 0.4;
+            pointer-events: none;
+        }
+        .btn-neon-wa:hover { background: rgba(37, 211, 102, 0.6); }
+        .btn-neon-tele:hover { background: rgba(0, 136, 204, 0.6); }
+        .help-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+        .help-btn {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 6px 12px;
+            border-radius: 40px;
+            font-size: 0.65rem;
+            cursor: pointer;
+            color: rgba(255,255,255,0.7);
+            transition: 0.2s;
+        }
+        .help-btn:hover { background: rgba(255, 255, 255, 0.2); color: white; }
+        .error-msg { color: #ffaaaa; font-size: 0.7rem; margin-top: 6px; }
+        .close-modal-btn { background: rgba(255, 255, 255, 0.1); border: none; padding: 8px 24px; border-radius: 40px; margin-top: 15px; cursor: pointer; color: white; }
+        footer { text-align: center; font-size: 0.7rem; margin-top: 1.5rem; color: rgba(255, 255, 255, 0.5); }
+        .status-info { color: rgba(255, 220, 150, 0.8); font-size: 0.7rem; margin-top: 8px; }
+
+        .explanation-modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(16px);
+            display: flex; align-items: center; justify-content: center;
+            z-index: 3000; visibility: hidden; opacity: 0;
+        }
+        .explanation-modal.active { visibility: visible; opacity: 1; }
+        .explanation-modal-content {
+            background: rgba(20, 20, 35, 0.7);
+            backdrop-filter: blur(20px);
+            border-radius: 1.5rem;
+            max-width: 500px;
+            width: 85%;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            text-align: center;
+        }
+        .close-exp-modal { background: rgba(255, 255, 255, 0.15); border: none; padding: 8px 20px; border-radius: 50px; margin-top: 15px; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+<div class="video-fallback"></div>
+<video id="bgVideo" autoplay loop muted playsinline style="position:fixed; top:0; left:0; width:100%; height:100%; object-fit:cover; z-index:0;">
+    <source src="https://videotourl.com/videos/1780320808551-5cbffce3-e9ee-4b56-af1f-c13fdb4dc3aa.mp4" type="video/mp4">
+</video>
+
+<div class="sound-control" id="soundControl">
+    <i id="soundIcon" class="fas fa-volume-mute"></i>
+    <span id="soundText">Mute</span>
+</div>
+
+<div class="content-overlay">
+    <div id="loadingScreen" class="loading-screen">
+        <div class="loading-logo"><i class="fas fa-sliders-h"></i> YANZ XITER</div>
+        <div class="loading-spinner"></div>
+        <div class="loading-text">LOADING SECURE SYSTEM...</div>
+    </div>
+
+    <div id="appMain" class="app-main">
+        <div class="hero-glow">
+            <h1><i class="fas fa-crown"></i> YANZXITERZ STORE</h1>
+            <div class="badge-ob53">👑 ALL FILE GACOR • DISKON OB53 👑</div>
+            <div class="contact-row">
+                <a href="https://t.me/yanzking122" target="_blank" class="contact-badge tele"><i class="fab fa-telegram"></i> t.me/yanzking122</a>
+                <a href="https://wa.me/6289644559099" target="_blank" class="contact-badge whatsapp"><i class="fab fa-whatsapp"></i> wa.me/6289644559099</a>
+            </div>
+            <div style="margin-top: 12px;"><i class="fas fa-bolt"></i> FAST RESPON • AMAN • GACOR</div>
+        </div>
+
+        <div class="visitor-panel">
+            <div class="visitor-stats">
+                <div class="stat-card"><i class="fas fa-eye"></i> <span id="visitorCount">0</span> <small>Pengunjung Hari Ini</small></div>
+                <div class="stat-card"><i class="fas fa-users"></i> <span id="onlineCount">0</span> <small>Online Sekarang</small></div>
+                <div class="stat-card total-neon"><i class="fas fa-chart-line"></i> <span id="totalVisitor">0</span> <small>Total Pengunjung</small></div>
+            </div>
+            <button class="btn-buy-now" id="globalBuyBtn"><i class="fas fa-shopping-cart"></i> BELI FILE SEKARANG</button>
+        </div>
+
+        <div style="display: flex; justify-content: center;">
+            <button id="scrollToExplanationBtn" class="btn-explanation">
+                <i class="fas fa-info-circle"></i> PENJELASAN PENTING <i class="fas fa-arrow-down"></i>
+            </button>
+        </div>
+
+        <div id="categoriesContainer"></div>
+
+        <div id="explanationSection" class="explanation-section">
+            <div style="font-size:1.2rem; text-align:center; margin-bottom:1rem; color:rgba(255,200,100,0.9); font-weight:bold;">*PENJELASAN PENTING YA SMART BUYER*</div>
+            <div id="explanationGrid"></div>
+        </div>
+        <footer>✨ KLIK BELI → TF ke DANA → isi link grup → klik tombol NEON KONFIRMASI ✨</footer>
+    </div>
+
+    <!-- MODAL PEMBAYARAN -->
+    <div id="paymentModal" class="modal-payment">
+        <div class="modal-card">
+            <div id="modalProductName" style="background:rgba(255,255,255,0.1); display:inline-block; padding:5px 15px; border-radius:60px;">-</div>
+            <div id="modalPrice" style="font-size:1.7rem; font-weight:800; color:#ffdd99; margin:8px 0;">Rp 0</div>
+            <div class="dana-box">
+                <div class="nomor-dana">089644559099</div>
+                <p>Total: <span id="modalTotalDisplay">Rp 0</span></p>
+                <button id="copyDanaModalBtn" style="background:rgba(255,255,255,0.1); border:none; padding:5px 12px; border-radius:30px; margin:8px 0;"><i class="fas fa-copy"></i> Salin No DANA</button>
+                <div class="input-group">
+                    <input type="text" id="groupLinkInput" placeholder="https://chat.whatsapp.com/xxxx atau https://t.me/xxxx">
+                    <div id="linkErrorMsg" class="error-msg"></div>
+                    <div class="status-info" id="linkStatusInfo">⭐ WAJIB isi link grup WhatsApp/Telegram</div>
+                </div>
+            </div>
+            <div>
+                <a href="#" id="confirmWaBtn" class="btn-neon btn-neon-wa" target="_blank"><i class="fab fa-whatsapp"></i> KONFIRMASI WA</a>
+                <a href="#" id="confirmTeleBtn" class="btn-neon btn-neon-tele" target="_blank"><i class="fab fa-telegram"></i> KONFIRMASI TELE</a>
+            </div>
+            
+            <div class="help-buttons">
+                <button class="help-btn" id="howToCreateWAGroupBtn"><i class="fab fa-whatsapp"></i> Cara Buat Grup WA</button>
+                <button class="help-btn" id="howToGetWALinkBtn"><i class="fas fa-link"></i> Cara Dapat Link Grup WA</button>
+                <button class="help-btn" id="howToCreateTeleGroupBtn"><i class="fab fa-telegram"></i> Cara Buat Grup Tele</button>
+                <button class="help-btn" id="howToGetTeleLinkBtn"><i class="fas fa-link"></i> Cara Dapat Link Tele</button>
+            </div>
+            
+            <button class="close-modal-btn" id="closeModalBtn"><i class="fas fa-times"></i> Tutup</button>
+        </div>
+    </div>
+
+    <div id="explanationModal" class="explanation-modal">
+        <div class="explanation-modal-content">
+            <div class="explanation-modal-title" id="expModalTitle" style="font-size:1.3rem; font-weight:800; color:#ffdd99;">-</div>
+            <div class="explanation-modal-desc" id="expModalDesc" style="margin:15px 0;">-</div>
+            <button class="close-exp-modal" id="closeExpModalBtn">Tutup</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ======================== VIDEO & SUARA ========================
+    const bgVideo = document.getElementById('bgVideo');
+    const soundControl = document.getElementById('soundControl');
+    const soundIcon = document.getElementById('soundIcon');
+    const soundText = document.getElementById('soundText');
+    let isMuted = true;
+    if (bgVideo) bgVideo.muted = true;
+    function toggleMute() {
+        isMuted = !isMuted;
+        if (bgVideo) bgVideo.muted = isMuted;
+        soundIcon.className = isMuted ? "fas fa-volume-mute" : "fas fa-volume-up";
+        soundText.innerText = isMuted ? "Mute" : "Unmute";
+    }
+    soundControl?.addEventListener('click', toggleMute);
+
+    // ======================== LOADING ========================
+    function hideLoadingAndShowApp() {
+        const loadingDiv = document.getElementById("loadingScreen");
+        loadingDiv.classList.add("hide");
+        setTimeout(() => {
+            loadingDiv.style.display = "none";
+            document.getElementById("appMain").classList.add("show");
+        }, 500);
+    }
+    window.addEventListener("load", () => { setTimeout(hideLoadingAndShowApp, 1800); });
+
+    // ======================== VISITOR SYSTEM ========================
+    let totalVisitors = localStorage.getItem('totalVisitors') ? parseInt(localStorage.getItem('totalVisitors')) : 0;
+    let todayVisitors = localStorage.getItem('todayVisitors') ? parseInt(localStorage.getItem('todayVisitors')) : 0;
+    const lastDate = localStorage.getItem('lastDate');
+    const today = new Date().toDateString();
+    if (lastDate !== today) { todayVisitors = 0; localStorage.setItem('lastDate', today); }
+    const sessionId = Math.random().toString(36).substring(2);
+    let activeSessions = JSON.parse(localStorage.getItem('activeSessions') || '{}');
+    const now = Date.now();
+    Object.keys(activeSessions).forEach(sid => { if (now - activeSessions[sid] > 60000) delete activeSessions[sid]; });
+    if (!activeSessions[sessionId]) {
+        activeSessions[sessionId] = now;
+        totalVisitors++; todayVisitors++;
+        localStorage.setItem('totalVisitors', totalVisitors);
+        localStorage.setItem('todayVisitors', todayVisitors);
+    }
+    activeSessions[sessionId] = now;
+    localStorage.setItem('activeSessions', JSON.stringify(activeSessions));
+    setInterval(() => {
+        const now2 = Date.now();
+        let sessions = JSON.parse(localStorage.getItem('activeSessions') || '{}');
+        Object.keys(sessions).forEach(sid => { if (now2 - sessions[sid] > 60000) delete sessions[sid]; });
+        sessions[sessionId] = now2;
+        localStorage.setItem('activeSessions', JSON.stringify(sessions));
+        document.getElementById('onlineCount').innerText = Object.keys(sessions).length;
+    }, 10000);
+    document.getElementById('visitorCount').innerText = todayVisitors;
+    document.getElementById('totalVisitor').innerText = totalVisitors;
+    document.getElementById('onlineCount').innerText = Object.keys(activeSessions).length;
+
+    // DATA KATEGORI (LENGKAP)
+    const categoriesData = [
+        { name: "🌟 NEW FILE", icon: "fa-star", items: [{ name: "💀 HEADLOCK 100% LUNARIS", price: 25000, priceStr: "25K" }, { name: "GLOWAL GEPENG", price: 20000, priceStr: "20K" }, { name: "glowal mini", price: 15000, priceStr: "15K" }, { name: "ALL FILE YANZ", price: 900000, priceStr: "900K" }] },
+        { name: "👑 FILE PRIBADI YANZ", icon: "fa-laptop-code", items: [{ name: "🤖 MECHACORE SETTINGS [PRIV]", price: 50000, priceStr: "50K" }, { name: "NEXACORE ULTRA SETTINGS [PRIV]", price: 45000, priceStr: "45K" }, { name: "🔒 BODYLOCK 100%", price: 8000, priceStr: "8K" }, { name: "⚙ AIM SETTINGS ASTRANOVA", price: 14000, priceStr: "14K" }, { name: "⚙ AIM SETTINGS ELECTROLYTES ", price: 18000, priceStr: "18K" }, { name: "🌟 STARVYN DRAG SHOOT ", price: 15000, priceStr: "15K" }, { name: "❄️ AIM SMOOTH XERPHES", price: 13000, priceStr: "13K" }, { name: "⚡ EASY DRAG INFERNUS GEN V5", price: 12000, priceStr: "12K" }, { name: "GLOWAL MINI (PRIME)", price: 10000, priceStr: "10K" }, { name: "CARA BIKIN FILE", price: 400000, priceStr: "400K" }] },
+        { name: "🎯 AIMBOT NOUNS", icon: "fa-bullseye", items: [{ name: "🎯 AIMBOT NOUNS V1", price: 3000, priceStr: "3K" }, { name: "🎯 AIMBOT NOUNS V2", price: 4500, priceStr: "4,5K" }, { name: "🎯 AIMBOT NOUNS V3", price: 7000, priceStr: "7K" }, { name: "🎯 AIMBOT NOUNS V4", price: 10000, priceStr: "10K" }, { name: "🎯 AIMBOT NOUNS V5", price: 12000, priceStr: "12K" }] },
+        { name: "🎯 AIMBOT PREMIUM", icon: "fa-gem", items: [{ name: "🎯 AIMBOT HARDENED", price: 8000, priceStr: "8K" }, { name: "🎯 AIMBOT INFERNUS", price: 10000, priceStr: "10K" }] },
+        { name: "🔒 BODYLOCK VIP", icon: "fa-shield-alt", items: [{ name: "🔒 BODYLOCK 50%", price: 1000, priceStr: "1K" }, { name: "🔒 BODYLOCK 60%", price: 2000, priceStr: "2K" }, { name: "🔒 BODYLOCK 70%", price: 3000, priceStr: "3K" }, { name: "🔒 BODYLOCK 80%", price: 4000, priceStr: "4K" }, { name: "🔒 BODYLOCK 90%", price: 5000, priceStr: "5K" }, { name: "🔒 BODYLOCK 97% V1", price: 6000, priceStr: "6K" }, { name: "🔒 BODYLOCK 97% V2", price: 7000, priceStr: "7K" }, { name: "🔒 BODYLOCK 97% V3", price: 8000, priceStr: "8K" }, { name: "🔒 BODYLOCK 100%", price: 10000, priceStr: "10K" }] },
+        { name: "⚙ AIM SETTINGS PREMIUM", icon: "fa-sliders-h", items: [{ name: "⚙ AIM SETTINGS COSMOSTIC", price: 10000, priceStr: "10K" }, { name: "⚙ AIM SETTINGS MULTIVERSE", price: 11500, priceStr: "11,5K" }, { name: "⚙ AIM SETTINGS ASTRAVION", price: 12500, priceStr: "12,5K" }, { name: "⚙ AIM SETTINGS ASTRANOVA", price: 14000, priceStr: "14K" }] },
+        { name: "⚙ DISKON AIM SETTINGS", icon: "fa-tachometer-alt", items: [{ name: "⚙ AIM SETTINGS WARRIORS VIP", price: 3000, priceStr: "3K" }, { name: "⚙ AIM SETTINGS DESTROYER VIP", price: 6000, priceStr: "6K" }, { name: "⚙ AIM SETTINGS MISTICKS VVIP", price: 8000, priceStr: "8K" }, { name: "⚙ AIM SETTINGS TRACKING INFERNUS VVIP", price: 10000, priceStr: "10K" }, { name: "⚙ AIM SETTINGS GLOMERUUS VVIP", price: 11000, priceStr: "11K" }, { name: "⚙ AIM SETTINGS MYCOPLASMA VVIP", price: 12500, priceStr: "12,5K" }, { name: "⚙ AIM SETTINGS SUPERCHARGE VVIP", price: 14500, priceStr: "14,5K" }, { name: "⚙ AIM SETTINGS NEOGENESIS VVIP", price: 18000, priceStr: "18K" }, { name: "⚙ AIM SETTINGS ELECTROLYTES VVIP", price: 25000, priceStr: "25K" }] },
+        { name: "🌟 DRAG SHOOT", icon: "fa-dragon", items: [{ name: "🌟 DRAG SHOOT VVIP", price: 5000, priceStr: "5K" }, { name: "🌟 COSMOS DRAG SHOOT VVIP", price: 7000, priceStr: "7K" }, { name: "🌟 NEBULA DRAG SHOOT VVIP", price: 12000, priceStr: "12K" }, { name: "🌟 STARVYN DRAG SHOOT VVIP", price: 30000, priceStr: "30K" }] },
+        { name: "👑 DISKON AIM HEAD", icon: "fa-crosshairs", items: [{ name: "👑 AIM HEAD BASIC", price: 3000, priceStr: "3K" }, { name: "👑 AIM HEAD ULTRA", price: 7000, priceStr: "7K" }, { name: "👑 AIM HEAD VANDARIS", price: 10000, priceStr: "10K" }, { name: "👑 AIM HEAD ACUVALTOR", price: 13000, priceStr: "13K" }, { name: "👑 AIM HEAD MAXVARION", price: 17000, priceStr: "17K" }] },
+        { name: "💀 HEADLOCK", icon: "fa-skull", items: [{ name: "💀 STAR HEADLOCK 75% VIP", price: 3000, priceStr: "3K" }, { name: "💀 PHOENIX HEADLOCK 82% VIP", price: 6000, priceStr: "6K" }, { name: "💀 SONIC HEADLOCK 89% VIP", price: 8500, priceStr: "8,5K" }, { name: "💀 QUARTZ HEADLOCK 91% VIP", price: 12000, priceStr: "12K" }, { name: "💀 CAKRA HEADLOCK VIP 93%", price: 13000, priceStr: "13K" }, { name: "💀 SCORPIONS HEADLOCK 95% VIP", price: 14000, priceStr: "14K" }, { name: "💀 YZ HEADLOCK VVIP 97%", price: 16000, priceStr: "16K" }] },
+        { name: "⚡ DISKON EASY DRAG", icon: "fa-hand-peace", items: [{ name: "⚡ EASY DRAG BASICCALLY GEN V1", price: 3000, priceStr: "3K" }, { name: "⚡ EASY DRAG MEDIUM GEN V2", price: 4000, priceStr: "4K" }, { name: "⚡ EASY DRAG MAXIMUM GEN V3", price: 6000, priceStr: "6K" }, { name: "⚡ EASY DRAG HARDENED GEN V4", price: 8000, priceStr: "8K" }, { name: "⚡ EASY DRAG INFERNUS GEN V5", price: 12000, priceStr: "12K" }] },
+        { name: "👑 DISKON GOOD DATA", icon: "fa-database", items: [{ name: "👑 GOOD DATA LOCK HIGH PERFORM", price: 8000, priceStr: "8K" }, { name: "👑 GOOD DATA ULTRA HIGH LOCK PERFORM", price: 10000, priceStr: "10K" }] },
+        { name: "❄️ DISKON AIM SMOOTH", icon: "fa-snowflake", items: [{ name: "❄️ AIM SMOOTH AQUARIUS", price: 3000, priceStr: "3K" }, { name: "❄️ AIM SMOOTH ZEUS", price: 5000, priceStr: "5K" }, { name: "❄️ AIM SMOOTH BLESS", price: 7000, priceStr: "7K" }, { name: "❄️ AIM SMOOTH ROLEMFS", price: 9500, priceStr: "9,5K" }, { name: "❄️ AIM SMOOTH POSEIDON", price: 10000, priceStr: "10K" }, { name: "❄️ AIM SMOOTH XERPHES", price: 15000, priceStr: "15K" }] },
+        { name: "⚙ DISKON STABILIZER & REGE", icon: "fa-waveform", items: [{ name: "⚙ STABILIZERxREGE", price: 4000, priceStr: "4K" }, { name: "⚙ STABILIZER V1", price: 1500, priceStr: "1,5K" }, { name: "⚙ STABILIZER V2", price: 2000, priceStr: "2K" }, { name: "⚙ REGE 90%", price: 4000, priceStr: "4K" }] },
+        { name: "🔥 APK BUG MANTA (BUG WA)", icon: "fa-fire", items: [{ name: "⭐ FULL UP", price: 60000, priceStr: "60K" }, { name: "⭐ RESER", price: 80000, priceStr: "80K" }, { name: "⭐ PT", price: 110000, priceStr: "110K" }, { name: "HARIAN 5K/HARI", price: 5000, priceStr: "5K" }] },
+        { name: "APK DARKVERSE (BUG WA)", icon: "fa-shield-alt", items: [{ name: "darkverse permanen", price: 25000, priceStr: "25K" }, { name: "RESELER", price: 50000, priceStr: "50K" }] },
+        { name: "APK OTAX BLUM ADA", icon: "fa-shield-alt", items: [{ name: "NAMA PRODUK", price: 60000, priceStr: "60K" }] },
+        { name: "JASA WEB MURAH", icon: "fa-laptop-code", items: [ { name: "JASA BUAT WEB (SIMPLE)", price: 10000, priceStr: "10K" }, { name: "JASA WEB (LUMAYAN) ", price: 20000, priceStr: "20K" }, { name: "JASA WEB (KEREN) ", price: 35000, priceStr: "35K" }, { name: "WEB SUPER BAGUS MODRN [PRIVAT]", price: 100000, priceStr: "100K" }, { name: "CARA BIKIN WEB (HTML,CSS,JS,PHP,PY, C++)", price: 500000, priceStr: "500K" }] }
+    ];
+
+    const explanations = [
+        { title: "[ AIM ON POINT TO BODY ]", desc: "Aim lebih on point ke target saat crosshair sudah berada di badan musuh sesuai presentase yang kamu gunakan" },
+        { title: "[ AIMBOT ]", desc: "Crosshair cenderung lebih sering terkena musuh dibagian kepala atau lengket ke musuh" },
+        { title: "[ AIM SETTINGS ]", desc: "Crosshair/aim sudah di setting oleh file untuk melengket kan ke kepala musuh dan terdapat float/sensi XYZ,dan terdapat easy drag" },
+        { title: "[ STABILIZER ]", desc: "Membuat presentase aim on point lebih tinggi dan cenderung aim selalu on point" },
+        { title: "[ AIM HEAD ]", desc: "Aim cenderung mengarah ke kepala saat aim sudah berada di dada musuh dan di drag akan menyentuh ke kepala sesuai presentase" },
+        { title: "[ AIM GOD ]", desc: "Aim jadi lebih stabil ke kepala musuh dan aim lebih ke tracking untuk mengarah ke kepala musuh,terdapat perbaikan sensi di dalam file tergantung jenis GOD yang kamu beli" },
+        { title: "[ EASY DRAG ]", desc: "Membuat tombol tembak lebih ringan dan crosshair yg berada di badan musuh menjadi lebih cepat mengarah ke kepala sesuai presentase" },
+        { title: "[ HEADLOCK ]", desc: "Cenderung membuat aim lebih sering lengket ke kepala pada saat crosshair sudah dibadan dan didrag jika sudah mengarah ke kepala maka aimnya terkunci disitu, semakin besar presentase semakin bagus" },
+        { title: "[ HEADTRICK ]", desc: "Teknik atau settingan yang membuat aim lebih mudah naik ke kepala saat melakukan drag dari badan ke atas, cenderung lebih halus, cepat, dan konsisten dalam menghasilkan headshot" },
+        { title: "[ GOODDATA ]", desc: "Setting atau data yang membuat sensitivitas dan respon aim terasa lebih stabil, ringan, dan presisi saat bermain. Cenderung membantu crosshair lebih mudah nempel ke musuh, drag lebih halus, serta meningkatkan kenyamanan gameplay dan peluang headshot sesuai setting yang digunakan" },
+        { title: "[ DRAG SHOOT ]", desc: "Teknik menembak sambil menggeser crosshair dari badan ke arah kepala secara cepat agar peluru lebih mudah menghasilkan headshot. Semakin bagus drag dan timing yang digunakan maka aim akan terasa lebih sakit dan akurat saat war" },
+        { title: "[ APK BUG WA ]", desc: "APLIKASI BUG YANG DELANGKAPI FUNC SESUAI PAYLOAD BUG DAN FITUR SENDER di jamin TARGET C1 HASIL NYA MEMUAS KAN" },
+        { title: "[JASA WEB]", desc: " layanan buat bikin website buat orang yang nggak mau ribet ngoding sendiri BIAYA NYA KADANG 300-10JT TAPI KALO DI WEB YANZXITER KAMU CUKUP BAYAR 10-50K DI SINI MURAH TAPI KUALITAS JANGAN DINTANYA." },
+        { title: "[CARA BIKIN WEB]", desc: "JIKA ANDA MEMBELI AKSES CARA BIKIN WEB ANDA AKAN DI MASUK KAN KE GRUB WA/TELE AKAN DI AJARIN CARA MEMBUAT WEB SESUAI PILIHAN ANDA HTML,CSS,dll." },
+        { title: "[INFORMASI]", desc: "SEMUA FILE MASIH DISKON HARGA BELUM DI UBAH. JIKA INFO INI SUDAH HILANG ALL FILE SUDAH TIDAK DISKON,MUMPUNG MASIH MURAH GAS BORONG" }
+    ];
+
+    let currentProduct = null;
+
+    function isValidGroupLink(link) {
+        if (!link || link.trim() === "") return false;
+        const waPattern = /^https:\/\/(chat\.whatsapp\.com|whatsapp\.com)\/.+$/i;
+        const telePattern = /^https:\/\/(t\.me|telegram\.me|telegram\.dog)\/.+$/i;
+        return waPattern.test(link) || telePattern.test(link);
+    }
+
+    function updateConfirmButtonsState() {
+        const linkInput = document.getElementById("groupLinkInput");
+        const link = linkInput ? linkInput.value.trim() : "";
+        const isValid = isValidGroupLink(link);
+        const errorMsgDiv = document.getElementById("linkErrorMsg");
+        
+        if (!isValid && link !== "") {
+            errorMsgDiv.innerText = "❌ Link tidak valid! Pastikan link grup WhatsApp/Telegram yang benar.";
+        } else if (link === "") {
+            errorMsgDiv.innerText = "⚠️ Link grup WAJIB diisi!";
+        } else {
+            errorMsgDiv.innerText = "✅ Link grup valid. Silakan konfirmasi.";
+        }
+        
+        const waBtn = document.getElementById("confirmWaBtn");
+        const teleBtn = document.getElementById("confirmTeleBtn");
+        
+        if (!isValid) {
+            waBtn.classList.add("disabled");
+            teleBtn.classList.add("disabled");
+            waBtn.removeAttribute("href");
+            teleBtn.removeAttribute("href");
+        } else {
+            waBtn.classList.remove("disabled");
+            teleBtn.classList.remove("disabled");
+            const msg = `HALO ADMIN YANZXITERZ!%0A%0A✅ SAYA SUDAH TRANSFER Rp ${currentProduct?.price || 0} (${currentProduct?.priceStr || "0"})%0A📦 FILE: ${encodeURIComponent(currentProduct?.name || "")}%0A💳 VIA DANA: 089644559099%0A🔗 LINK GRUP SAYA: ${encodeURIComponent(link)}%0A%0A Mohon diproses.`;
+            waBtn.href = `https://wa.me/6289644559099?text=${msg}`;
+            teleBtn.href = `https://t.me/yanzking122?text=${msg}`;
+        }
+    }
+
+    function renderCategories() {
+        const container = document.getElementById("categoriesContainer");
+        if (!container) return;
+        container.innerHTML = "";
+        categoriesData.forEach(cat => {
+            const catCard = document.createElement("div"); catCard.className = "category-card";
+            const header = document.createElement("div"); header.className = "category-header";
+            header.innerHTML = `<div class="cat-title"><i class="fas ${cat.icon}"></i><span>${cat.name}</span></div><div class="toggle-icon"><i class="fas fa-chevron-down"></i></div>`;
+            const productsWrapper = document.createElement("div"); productsWrapper.className = "category-products";
+            const productListDiv = document.createElement("div"); productListDiv.className = "product-list";
+            if (cat.items && cat.items.length > 0) {
+                cat.items.forEach(item => {
+                    const productDiv = document.createElement("div"); productDiv.className = "product-item";
+                    productDiv.innerHTML = `<div class="product-name"><i class="fas fa-cube"></i> ${item.name}</div><div class="product-price">Rp ${item.priceStr}</div><button class="btn-buy" data-name="${item.name.replace(/"/g, '&quot;')}" data-price="${item.price}" data-pricestr="${item.priceStr}"><i class="fas fa-shopping-cart"></i> BELI</button>`;
+                    productListDiv.appendChild(productDiv);
+                });
+            } else {
+                productListDiv.innerHTML = `<div class="product-item" style="justify-content:center;">✨ Kosong ✨</div>`;
+            }
+            productsWrapper.appendChild(productListDiv); catCard.appendChild(header); catCard.appendChild(productsWrapper); container.appendChild(catCard);
+            header.addEventListener("click", () => {
+                const isOpen = productsWrapper.classList.contains("open");
+                if (isOpen) { productsWrapper.classList.remove("open"); header.querySelector(".toggle-icon i").className = "fas fa-chevron-down"; }
+                else { productsWrapper.classList.add("open"); header.querySelector(".toggle-icon i").className = "fas fa-chevron-up"; }
+            });
+        });
+        document.querySelectorAll('.btn-buy').forEach(btn => btn.addEventListener("click", (e) => {
+            const b = e.currentTarget;
+            currentProduct = { name: b.dataset.name, price: parseInt(b.dataset.price), priceStr: b.dataset.pricestr };
+            openModal();
+        }));
+    }
+
+    function renderExplanations() {
+        const grid = document.getElementById("explanationGrid");
+        if (!grid) return;
+        grid.innerHTML = "";
+        explanations.forEach(exp => {
+            const card = document.createElement("div");
+            card.className = "explain-card";
+            card.innerHTML = `<div class="explain-title"><i class="fas fa-circle-info"></i> ${exp.title}</div><div class="explain-desc">${exp.desc}</div>`;
+            card.addEventListener("click", () => {
+                document.getElementById("expModalTitle").innerText = exp.title;
+                document.getElementById("expModalDesc").innerText = exp.desc;
+                document.getElementById("explanationModal").classList.add("active");
+            });
+            grid.appendChild(card);
+        });
+    }
+
+    function openModal() {
+        if (!currentProduct) return;
+        document.getElementById("modalProductName").innerText = currentProduct.name;
+        document.getElementById("modalPrice").innerHTML = `Rp ${currentProduct.priceStr}`;
+        document.getElementById("modalTotalDisplay").innerText = `Rp ${currentProduct.priceStr}`;
+        document.getElementById("groupLinkInput").value = "";
+        document.getElementById("linkErrorMsg").innerText = "";
+        updateConfirmButtonsState();
+        document.getElementById("paymentModal").classList.add("active");
+    }
+
+    document.getElementById("groupLinkInput")?.addEventListener("input", updateConfirmButtonsState);
+    document.getElementById("copyDanaModalBtn")?.addEventListener("click", () => { navigator.clipboard.writeText("089644559099"); alert("No DANA disalin!"); });
+    document.getElementById("closeModalBtn")?.addEventListener("click", () => { document.getElementById("paymentModal").classList.remove("active"); currentProduct = null; });
+    document.getElementById("closeExpModalBtn")?.addEventListener("click", () => { document.getElementById("explanationModal").classList.remove("active"); });
+    
+    document.getElementById("howToCreateWAGroupBtn")?.addEventListener("click", () => {
+        alert("CARA BUAT GRUP WA:\n1. Buka WhatsApp\n2. Klik menu (3 titik) → Grup Baru\n3. Pilih kontak (minimal 1 orang)\n4. Buat nama grup (sesuai nama file)\n5. Klik centang / selesai");
+    });
+    document.getElementById("howToGetWALinkBtn")?.addEventListener("click", () => {
+        alert("CARA DAPAT LINK GRUP WA:\n1. Buka grup yang sudah dibuat\n2. Klik nama grup → Info Grup\n3. Scroll ke bawah → Klik 'Undang via Tautan'\n4. Klik 'Bagikan Tautan' → Copy link\n5. Paste link di kolom yang tersedia");
+    });
+    document.getElementById("howToCreateTeleGroupBtn")?.addEventListener("click", () => {
+        alert("CARA BUAT GRUP TELEGRAM:\n1. Buka Telegram\n2. Klik menu (garis tiga) → New Group\n3. Pilih kontak (minimal 1 orang)\n4. Buat nama grup (sesuai nama file)\n5. Klik centang / selesai");
+    });
+    document.getElementById("howToGetTeleLinkBtn")?.addEventListener("click", () => {
+        alert("CARA DAPAT LINK GRUP TELEGRAM:\n1. Buka grup yang sudah dibuat\n2. Klik nama grup → Manage Group\n3. Klik 'Invite Links'\n4. Klik 'Create Invite Link'\n5. Copy link → Paste di kolom yang tersedia");
+    });
+    
+    window.addEventListener("click", (e) => { 
+        if (e.target === document.getElementById("paymentModal")) document.getElementById("paymentModal").classList.remove("active");
+        if (e.target === document.getElementById("explanationModal")) document.getElementById("explanationModal").classList.remove("active");
+    });
+    document.getElementById("scrollToExplanationBtn")?.addEventListener("click", () => { document.getElementById("explanationSection").scrollIntoView({ behavior: "smooth", block: "start" }); });
+    document.getElementById("globalBuyBtn")?.addEventListener("click", () => {
+        const firstProduct = document.querySelector(".btn-buy");
+        if (firstProduct) firstProduct.click();
+        else alert("Pilih produk dari kategori terlebih dahulu");
+    });
+
+    renderCategories();
+    renderExplanations();
+    setTimeout(() => {
+        const firstCat = document.querySelector(".category-products");
+        if (firstCat && !firstCat.classList.contains("open")) { firstCat.classList.add("open"); const icon = document.querySelector(".category-header .toggle-icon i"); if (icon) icon.className = "fas fa-chevron-up"; }
+    }, 300);
+</script>
+</body>
+</html>
