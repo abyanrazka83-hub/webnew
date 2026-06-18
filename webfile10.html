@@ -1,0 +1,1873 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>YANZ XITERZ — SAPPHIRE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;600;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        /* ═══════════════════════════════
+           ROOT TOKENS
+        ═══════════════════════════════ */
+        :root {
+            --bg: #04030d;
+            --bg2: #080615;
+            --bg3: #0c0a1e;
+            --surf: rgba(255, 255, 255, 0.032);
+            --surf2: rgba(255, 255, 255, 0.06);
+            --c1: #00e5ff;
+            --c2: #b36bff;
+            --c3: #ff3d6e;
+            --gold: #fbbf24;
+            --green: #00e08a;
+            --border: rgba(0, 229, 255, 0.1);
+            --border2: rgba(0, 229, 255, 0.25);
+            --text: #eef0ff;
+            --dim: #5a5a82;
+            --F1: 'Bebas Neue', sans-serif;
+            --F2: 'Outfit', sans-serif;
+            --F3: 'JetBrains Mono', monospace;
+            --r: 18px;
+            --r2: 14px;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: var(--F2);
+            background: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
+            min-height: 100vh;
+            cursor: default;
+        }
+
+        /* ═══════════════════════════════
+           CANVAS BG
+        ═══════════════════════════════ */
+        #cv {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* ═══════════════════════════════
+           INTRO SCREEN
+        ═══════════════════════════════ */
+        #intro {
+            position: fixed;
+            inset: 0;
+            background: var(--bg);
+            z-index: 99999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 24px;
+            transition: opacity 0.6s, transform 0.6s;
+        }
+        #intro.out {
+            opacity: 0;
+            transform: scale(1.06);
+            pointer-events: none;
+        }
+        .il {
+            font-family: var(--F1);
+            font-size: clamp(2.8rem, 10vw, 5rem);
+            letter-spacing: 8px;
+            text-align: center;
+            line-height: 1;
+        }
+        .il .hl {
+            background: linear-gradient(90deg, var(--c1), var(--c2), var(--c3));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 200%;
+            animation: gradShift 3s linear infinite;
+        }
+        @keyframes gradShift {
+            0% {
+                background-position: 0%
+            }
+            100% {
+                background-position: 200%
+            }
+        }
+        .i-tag {
+            font-family: var(--F3);
+            font-size: 0.6rem;
+            letter-spacing: 6px;
+            color: var(--dim);
+            text-transform: uppercase;
+        }
+        .i-prog {
+            width: 180px;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+        .i-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--c1), var(--c2));
+            animation: prog 1.6s cubic-bezier(.4, 0, .2, 1) forwards;
+        }
+        @keyframes prog {
+            to {
+                width: 100%;
+                transform: none;
+            }
+            from {
+                width: 0;
+            }
+        }
+
+        /* ═══════════════════════════════
+           HEADER
+        ═══════════════════════════════ */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 500;
+            height: 58px;
+            padding: 0 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(4, 3, 13, 0.88);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border-bottom: 1px solid var(--border);
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .logo-mark {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, var(--c1), var(--c2));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--F1);
+            font-size: 1.05rem;
+            color: #000;
+            letter-spacing: 1px;
+            box-shadow: 0 0 14px rgba(0, 229, 255, 0.35);
+        }
+        .logo-text {
+            font-family: var(--F1);
+            font-size: 1.15rem;
+            letter-spacing: 3px;
+        }
+        .logo-text em {
+            color: var(--c1);
+            font-style: normal;
+        }
+        .hdr-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .live-chip {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-family: var(--F3);
+            font-size: 0.55rem;
+            letter-spacing: 2px;
+            color: var(--green);
+            background: rgba(0, 224, 138, 0.07);
+            border: 1px solid rgba(0, 224, 138, 0.18);
+            border-radius: 6px;
+            padding: 5px 9px;
+        }
+        .live-dot {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--green);
+            animation: blink 1.2s infinite;
+        }
+        @keyframes blink {
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.15;
+            }
+        }
+        .fp-btn {
+            background: none;
+            border: 1px solid var(--border2);
+            border-radius: 8px;
+            width: 34px;
+            height: 34px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--dim);
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .fp-btn:hover {
+            color: var(--c1);
+            border-color: var(--c1);
+            background: rgba(0, 229, 255, 0.06);
+        }
+
+        /* ═══════════════════════════════
+           HERO STRIP
+        ═══════════════════════════════ */
+        .hero-strip {
+            position: relative;
+            z-index: 1;
+            padding: 22px 18px 0;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .hero-inner {
+            background: linear-gradient(135deg, rgba(0, 229, 255, 0.07) 0%, rgba(179, 107, 255, 0.07) 50%, rgba(255, 61, 110, 0.05) 100%);
+            border: 1px solid var(--border2);
+            border-radius: 20px;
+            padding: 22px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            overflow: hidden;
+            position: relative;
+        }
+        .hero-inner::before {
+            content: '';
+            position: absolute;
+            top: -60px;
+            right: -60px;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(0, 229, 255, 0.12), transparent 70%);
+            pointer-events: none;
+        }
+        .hero-left {}
+        .hero-title {
+            font-family: var(--F1);
+            font-size: clamp(1.4rem, 5vw, 2.2rem);
+            letter-spacing: 3px;
+            line-height: 1;
+            margin-bottom: 6px;
+        }
+        .hero-title .hl2 {
+            color: var(--c1);
+        }
+        .hero-sub {
+            font-size: 0.75rem;
+            color: var(--dim);
+            font-family: var(--F3);
+            letter-spacing: 1px;
+        }
+        .hero-badges {
+            display: flex;
+            gap: 8px;
+            margin-top: 14px;
+            flex-wrap: wrap;
+        }
+        .hb {
+            font-family: var(--F3);
+            font-size: 0.5rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            padding: 4px 10px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .hb-cyan {
+            background: rgba(0, 229, 255, 0.1);
+            color: var(--c1);
+            border: 1px solid rgba(0, 229, 255, 0.2);
+        }
+        .hb-pink {
+            background: rgba(255, 61, 110, 0.1);
+            color: var(--c3);
+            border: 1px solid rgba(255, 61, 110, 0.2);
+        }
+        .hb-gold {
+            background: rgba(251, 191, 36, 0.1);
+            color: var(--gold);
+            border: 1px solid rgba(251, 191, 36, 0.2);
+        }
+        .hero-right {
+            text-align: right;
+            flex-shrink: 0;
+        }
+        .hero-num {
+            font-family: var(--F1);
+            font-size: 2.8rem;
+            color: var(--c1);
+            line-height: 1;
+            text-shadow: 0 0 30px rgba(0, 229, 255, 0.4);
+        }
+        .hero-nlabel {
+            font-family: var(--F3);
+            font-size: 0.5rem;
+            color: var(--dim);
+            letter-spacing: 2px;
+            margin-top: 2px;
+        }
+
+        /* ═══════════════════════════════
+           SEARCH
+        ═══════════════════════════════ */
+        .s-wrap {
+            padding: 16px 18px 0;
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+        .s-box {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--surf);
+            border: 1px solid var(--border);
+            border-radius: var(--r);
+            padding: 13px 18px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        .s-box:focus-within {
+            border-color: rgba(0, 229, 255, 0.4);
+            box-shadow: 0 0 0 3px rgba(0, 229, 255, 0.05);
+        }
+        .s-box i {
+            color: var(--c1);
+            font-size: 0.9rem;
+            opacity: 0.6;
+        }
+        .s-box input {
+            background: none;
+            border: none;
+            outline: none;
+            color: var(--text);
+            width: 100%;
+            font-family: var(--F2);
+            font-size: 0.9rem;
+        }
+        .s-box input::placeholder {
+            color: var(--dim);
+        }
+        .s-box .s-clear {
+            background: none;
+            border: none;
+            color: var(--dim);
+            font-size: 0.85rem;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.2s;
+            padding: 2px;
+        }
+        .s-box input:not(:placeholder-shown)~.s-clear {
+            opacity: 1;
+        }
+
+        /* ═══════════════════════════════
+           CATEGORY TABS
+        ═══════════════════════════════ */
+        .ct-scroll {
+            overflow-x: auto;
+            scrollbar-width: none;
+            position: relative;
+            z-index: 1;
+        }
+        .ct-scroll::-webkit-scrollbar {
+            display: none;
+        }
+        .ct-inner {
+            display: flex;
+            gap: 8px;
+            padding: 14px 18px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .chip {
+            padding: 8px 16px;
+            white-space: nowrap;
+            cursor: pointer;
+            font-family: var(--F3);
+            font-size: 0.6rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            color: var(--dim);
+            transition: all 0.22s;
+            user-select: none;
+        }
+        .chip:hover {
+            border-color: rgba(0, 229, 255, 0.3);
+            color: var(--c1);
+        }
+        .chip.active {
+            background: rgba(0, 229, 255, 0.1);
+            border-color: var(--c1);
+            color: var(--c1);
+            box-shadow: 0 0 16px rgba(0, 229, 255, 0.1);
+        }
+
+        /* ═══════════════════════════════
+           SECTION BAR
+        ═══════════════════════════════ */
+        .sec-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 18px;
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+        .sec-title {
+            font-family: var(--F1);
+            font-size: 1.1rem;
+            letter-spacing: 2px;
+        }
+        .sec-title span {
+            color: var(--c1);
+        }
+        .sec-count {
+            font-family: var(--F3);
+            font-size: 0.55rem;
+            letter-spacing: 2px;
+            color: var(--dim);
+            background: var(--surf);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 4px 12px;
+        }
+
+        /* ═══════════════════════════════
+           GRID
+        ═══════════════════════════════ */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(165px, 1fr));
+            gap: 13px;
+            padding: 10px 18px 240px;
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+        @media(max-width:420px) {
+            .grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+                padding-inline: 12px;
+            }
+        }
+        @media(min-width:900px) {
+            .grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+        }
+
+        /* ═══════════════════════════════
+           CARD
+        ═══════════════════════════════ */
+        .card {
+            background: var(--surf);
+            border: 1px solid var(--border);
+            border-radius: var(--r);
+            overflow: hidden;
+            transition: transform 0.28s cubic-bezier(.34, 1.56, .64, 1), box-shadow 0.28s, border-color 0.28s;
+            animation: cIn 0.4s ease backwards;
+            position: relative;
+        }
+        @keyframes cIn {
+            from {
+                opacity: 0;
+                transform: translateY(22px);
+            }
+            to {
+                opacity: 1;
+                transform: none;
+            }
+        }
+        .card:hover {
+            transform: translateY(-7px) scale(1.015);
+            border-color: rgba(0, 229, 255, 0.35);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(0, 229, 255, 0.2), 0 0 30px rgba(0, 229, 255, 0.06);
+        }
+        .card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1.5px;
+            background: linear-gradient(90deg, transparent, var(--c1), transparent);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .card:hover::after {
+            opacity: 1;
+        }
+
+        /* CARD IMAGE */
+        .c-img {
+            width: 100%;
+            aspect-ratio: 1/1;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(145deg, #080418, #0d0826);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .c-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        .c-icon-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            padding: 10px;
+            text-align: center;
+        }
+        .c-icon {
+            font-size: 2.1rem;
+            background: linear-gradient(135deg, var(--c1), var(--c2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 14px rgba(0, 229, 255, 0.4));
+        }
+        .c-cat-mini {
+            font-family: var(--F3);
+            font-size: 0.42rem;
+            letter-spacing: 2px;
+            color: var(--dim);
+            text-transform: uppercase;
+            line-height: 1.2;
+        }
+
+        /* Rotating glow in image */
+        .c-img-glow {
+            position: absolute;
+            inset: 0;
+            background: conic-gradient(from 0deg at 50% 50%, transparent 70%, rgba(0, 229, 255, 0.07) 85%, transparent 100%);
+            animation: rotG 8s linear infinite;
+        }
+        @keyframes rotG {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* TIER BADGE */
+        .tier {
+            position: absolute;
+            top: 9px;
+            left: 9px;
+            font-family: var(--F3);
+            font-size: 0.48rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-weight: 700;
+            z-index: 3;
+        }
+        .t-vvip {
+            background: rgba(251, 191, 36, 0.15);
+            color: var(--gold);
+            border: 1px solid rgba(251, 191, 36, 0.35);
+        }
+        .t-vip {
+            background: rgba(179, 107, 255, 0.15);
+            color: var(--c2);
+            border: 1px solid rgba(179, 107, 255, 0.3);
+        }
+        .t-std {
+            background: rgba(0, 229, 255, 0.08);
+            color: var(--c1);
+            border: 1px solid rgba(0, 229, 255, 0.2);
+        }
+
+        /* POPULARITY BAR */
+        .pop-bar-wrap {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.04);
+        }
+        .pop-bar {
+            height: 100%;
+            border-radius: 0 2px 0 0;
+            transition: width 0.8s ease;
+        }
+        .pb-gold {
+            background: linear-gradient(90deg, var(--gold), #fde68a);
+        }
+        .pb-cyan {
+            background: linear-gradient(90deg, var(--c1), var(--c2));
+        }
+        .pb-dim {
+            background: linear-gradient(90deg, var(--dim), var(--dim));
+        }
+
+        /* CARD BODY */
+        .c-body {
+            padding: 13px;
+        }
+        .c-meta {
+            font-family: var(--F3);
+            font-size: 0.48rem;
+            letter-spacing: 2px;
+            color: var(--dim);
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+        .c-name {
+            font-family: var(--F1);
+            font-size: 0.95rem;
+            letter-spacing: 1px;
+            line-height: 1.15;
+            margin-bottom: 10px;
+        }
+        .c-row {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+        .c-price-wrap {}
+        .c-plabel {
+            font-family: var(--F3);
+            font-size: 0.45rem;
+            color: var(--dim);
+            letter-spacing: 1.5px;
+            margin-bottom: 2px;
+        }
+        .c-price {
+            font-family: var(--F3);
+            font-size: 0.95rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--gold), #fde68a);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .c-stars {
+            font-size: 0.45rem;
+            color: var(--gold);
+            letter-spacing: 1px;
+            opacity: 0.8;
+            line-height: 1;
+        }
+
+        /* BUY BUTTON */
+        .c-btn {
+            width: 100%;
+            padding: 11px 12px;
+            border-radius: 11px;
+            cursor: pointer;
+            background: var(--surf);
+            border: 1px solid var(--border);
+            color: var(--text);
+            font-family: var(--F3);
+            font-size: 0.6rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            position: relative;
+            overflow: hidden;
+            transition: border-color 0.25s, color 0.25s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .c-btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, var(--c1), var(--c2));
+            opacity: 0;
+            transition: opacity 0.25s;
+        }
+        .c-btn span,
+        .c-btn i {
+            position: relative;
+            z-index: 1;
+            transition: color 0.25s;
+        }
+        .c-btn:hover {
+            border-color: transparent;
+            box-shadow: 0 6px 22px rgba(0, 229, 255, 0.2);
+        }
+        .c-btn:hover::before {
+            opacity: 1;
+        }
+        .c-btn:hover span,
+        .c-btn:hover i {
+            color: #000;
+        }
+
+        /* ═══════════════════════════════
+           FLOATING DOCK
+        ═══════════════════════════════ */
+        .dock {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 800;
+            background: rgba(4, 3, 13, 0.92);
+            backdrop-filter: blur(28px);
+            -webkit-backdrop-filter: blur(28px);
+            border-top: 1px solid var(--border);
+            padding: 14px 18px 22px;
+        }
+        .dock-btns {
+            display: flex;
+            gap: 12px;
+            max-width: 600px;
+            margin: 0 auto 12px;
+        }
+        .btn-testi {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 15px 12px;
+            border-radius: 14px;
+            text-decoration: none;
+            background: rgba(179, 107, 255, 0.1);
+            border: 1px solid rgba(179, 107, 255, 0.3);
+            color: var(--c2);
+            font-family: var(--F3);
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            transition: all 0.25s;
+        }
+        .btn-testi:hover {
+            background: rgba(179, 107, 255, 0.2);
+            box-shadow: 0 8px 24px rgba(179, 107, 255, 0.2);
+            transform: translateY(-2px);
+        }
+        .btn-testi i {
+            font-size: 1.05rem;
+        }
+        .btn-order {
+            flex: 2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 11px;
+            padding: 15px 12px;
+            border-radius: 14px;
+            text-decoration: none;
+            cursor: pointer;
+            border: none;
+            background: linear-gradient(135deg, var(--c1), var(--c2));
+            color: #000;
+            font-family: var(--F3);
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            box-shadow: 0 8px 30px rgba(0, 229, 255, 0.25);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .btn-order:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 14px 36px rgba(0, 229, 255, 0.35);
+        }
+        .btn-order i {
+            font-size: 1.1rem;
+        }
+
+        .dock-copy {
+            text-align: center;
+            font-family: var(--F3);
+            font-size: 0.55rem;
+            letter-spacing: 3px;
+            color: var(--dim);
+            text-transform: uppercase;
+        }
+        .dock-copy a {
+            color: var(--c1);
+            text-decoration: none;
+        }
+
+        /* ═══════════════════════════════
+           AUTHOR SECTION
+        ═══════════════════════════════ */
+        .author-section {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 18px 15px;
+        }
+        .author-card {
+            background: var(--surf);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            position: relative;
+            overflow: hidden;
+        }
+        .author-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(0, 229, 255, 0.03), rgba(179, 107, 255, 0.03));
+            pointer-events: none;
+        }
+        .author-av {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            flex-shrink: 0;
+            background: linear-gradient(135deg, var(--c1), var(--c2));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--F1);
+            font-size: 1.2rem;
+            color: #000;
+            letter-spacing: 1px;
+            box-shadow: 0 0 12px rgba(0, 229, 255, 0.25);
+        }
+        .author-info {
+            flex: 1;
+        }
+        .author-label {
+            font-family: var(--F3);
+            font-size: 0.55rem;
+            letter-spacing: 2px;
+            color: var(--dim);
+            text-transform: uppercase;
+            margin-bottom: 3px;
+        }
+        .author-name {
+            font-family: var(--F1);
+            font-size: 1.1rem;
+            letter-spacing: 1.5px;
+        }
+        .author-name em {
+            color: var(--c1);
+            font-style: normal;
+        }
+        .author-desc {
+            font-size: 0.75rem;
+            color: var(--dim);
+            margin-top: 2px;
+            font-family: var(--F2);
+        }
+        .author-right {
+            text-align: right;
+            flex-shrink: 0;
+        }
+        .author-ver {
+            font-family: var(--F3);
+            font-size: 0.55rem;
+            letter-spacing: 1.5px;
+            color: var(--c2);
+            background: rgba(179, 107, 255, 0.08);
+            border: 1px solid rgba(179, 107, 255, 0.15);
+            border-radius: 6px;
+            padding: 4px 10px;
+            display: inline-block;
+            margin-bottom: 6px;
+        }
+        .author-year {
+            font-family: var(--F3);
+            font-size: 0.55rem;
+            color: var(--dim);
+            letter-spacing: 1px;
+        }
+
+        /* ═══════════════════════════════
+           ADMIN PANEL
+        ═══════════════════════════════ */
+        #adm {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: var(--bg);
+            display: none;
+            overflow-y: auto;
+            padding: 22px 18px 120px;
+        }
+        .adm-hdr {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .adm-hdr h2 {
+            font-family: var(--F1);
+            font-size: 1.4rem;
+            letter-spacing: 3px;
+        }
+        .adm-hdr h2 em {
+            color: var(--c1);
+            font-style: normal;
+        }
+        .adm-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .adm-close {
+            background: var(--surf);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--dim);
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .adm-close:hover {
+            color: var(--text);
+            border-color: var(--c1);
+        }
+        .adm-add-btn,
+        .adm-cat-btn,
+        .adm-delcat-btn {
+            background: linear-gradient(135deg, var(--c1), var(--c2));
+            border: none;
+            border-radius: 8px;
+            color: #000;
+            font-family: var(--F3);
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            padding: 0 14px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+        .adm-cat-btn {
+            background: linear-gradient(135deg, var(--gold), #f59e0b);
+            color: #000;
+        }
+        .adm-delcat-btn {
+            background: linear-gradient(135deg, var(--c3), #dc2626);
+            color: #fff;
+        }
+        .adm-add-btn:hover,
+        .adm-cat-btn:hover,
+        .adm-delcat-btn:hover {
+            transform: scale(1.04);
+            box-shadow: 0 4px 20px rgba(0, 229, 255, 0.3);
+        }
+
+        /* Add product form */
+        .adm-add-form {
+            background: var(--surf2);
+            border: 1px solid var(--border2);
+            border-radius: 14px;
+            padding: 20px;
+            margin-bottom: 24px;
+            display: none;
+            animation: cIn 0.3s ease backwards;
+        }
+        .adm-add-form.open {
+            display: block;
+        }
+        .adm-add-form h3 {
+            font-family: var(--F1);
+            font-size: 1.05rem;
+            letter-spacing: 2px;
+            margin-bottom: 16px;
+        }
+        .adm-add-form h3 em {
+            color: var(--c1);
+            font-style: normal;
+        }
+        .adm-fl {
+            font-family: var(--F3);
+            font-size: 0.5rem;
+            letter-spacing: 2px;
+            color: var(--dim);
+            text-transform: uppercase;
+            margin-bottom: 5px;
+            margin-top: 12px;
+        }
+        .adm-fl:first-of-type {
+            margin-top: 0;
+        }
+        .adm-in,
+        .adm-select {
+            background: var(--bg3);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 11px 14px;
+            width: 100%;
+            border-radius: 10px;
+            font-family: var(--F2);
+            font-size: 0.85rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .adm-in:focus,
+        .adm-select:focus {
+            border-color: rgba(0, 229, 255, 0.4);
+        }
+        .adm-select {
+            appearance: none;
+            background: var(--bg3) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%235a5a82' d='M6 8L1 3h10z'/%3E%3C/svg%3E") no-repeat right 14px center;
+            background-size: 10px;
+            cursor: pointer;
+        }
+        .adm-select option {
+            background: var(--bg3);
+            color: var(--text);
+        }
+        .adm-form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+        @media(max-width:480px) {
+            .adm-form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+        }
+        .adm-submit {
+            background: linear-gradient(135deg, var(--green), #00b894);
+            color: #000;
+            border: none;
+            border-radius: 10px;
+            padding: 13px 24px;
+            font-family: var(--F3);
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            margin-top: 16px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .adm-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 28px rgba(0, 224, 138, 0.3);
+        }
+
+        .adm-item {
+            background: var(--surf);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 15px;
+            margin-bottom: 12px;
+            position: relative;
+        }
+        .adm-item .adm-del {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: rgba(255, 61, 110, 0.12);
+            border: 1px solid rgba(255, 61, 110, 0.25);
+            border-radius: 6px;
+            color: var(--c3);
+            font-size: 0.7rem;
+            padding: 4px 10px;
+            cursor: pointer;
+            font-family: var(--F3);
+            letter-spacing: 1px;
+            transition: all 0.2s;
+        }
+        .adm-item .adm-del:hover {
+            background: rgba(255, 61, 110, 0.25);
+            border-color: var(--c3);
+        }
+        .adm-item .adm-tier-select {
+            background: var(--bg3);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-family: var(--F3);
+            font-size: 0.65rem;
+            outline: none;
+            width: 100%;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+        .adm-item .adm-tier-select option {
+            background: var(--bg3);
+            color: var(--text);
+        }
+
+        .adm-save {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, var(--c1), var(--c2));
+            color: #000;
+            padding: 14px 42px;
+            border-radius: 50px;
+            border: none;
+            font-family: var(--F1);
+            font-size: 1.05rem;
+            letter-spacing: 2px;
+            cursor: pointer;
+            box-shadow: 0 10px 32px rgba(0, 229, 255, 0.25);
+            transition: transform 0.2s;
+        }
+        .adm-save:hover {
+            transform: translateX(-50%) translateY(-2px);
+        }
+
+        /* ═══════════════════════════════
+           TOAST
+        ═══════════════════════════════ */
+        .toast {
+            position: fixed;
+            top: 70px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-10px);
+            background: rgba(0, 229, 255, 0.1);
+            border: 1px solid rgba(0, 229, 255, 0.3);
+            border-radius: 10px;
+            padding: 10px 20px;
+            z-index: 99998;
+            font-family: var(--F3);
+            font-size: 0.6rem;
+            letter-spacing: 2px;
+            color: var(--c1);
+            opacity: 0;
+            transition: all 0.3s;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .z1 {
+            position: relative;
+            z-index: 1;
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="cv"></canvas>
+    <div class="toast" id="toast"></div>
+
+    <!-- INTRO -->
+    <div id="intro">
+        <div class="il">YANZ <span class="hl">XITERZ</span></div>
+        <div class="i-tag">Sapphire Edition · Est 2026</div>
+        <div class="i-prog"><div class="i-fill"></div></div>
+    </div>
+
+    <!-- ADMIN PANEL -->
+    <div id="adm">
+        <div class="adm-hdr">
+            <h2>ROOT <em>ACCESS</em></h2>
+            <div class="adm-actions">
+                <button class="adm-cat-btn" onclick="addCategory()"><i class="fas fa-folder-plus"></i> Kategori</button>
+                <button class="adm-delcat-btn" onclick="deleteCategory()"><i class="fas fa-folder-minus"></i> Hapus Kategori</button>
+                <button class="adm-add-btn" onclick="toggleAddForm()"><i class="fas fa-plus"></i> Tambah</button>
+                <button class="adm-close" onclick="closeAdm()"><i class="fas fa-xmark"></i></button>
+            </div>
+        </div>
+
+        <!-- ADD PRODUCT FORM -->
+        <div class="adm-add-form" id="addForm">
+            <h3>+ TAMBAH <em>PRODUK</em></h3>
+            <div class="adm-fl">Kategori</div>
+            <select class="adm-select" id="addCategory"></select>
+
+            <div class="adm-form-row">
+                <div>
+                    <div class="adm-fl">Nama Produk</div>
+                    <input class="adm-in" id="addName" placeholder="Contoh: GHOST V6">
+                </div>
+                <div>
+                    <div class="adm-fl">Harga (Rp)</div>
+                    <input class="adm-in" id="addPrice" placeholder="Contoh: 25.000">
+                </div>
+            </div>
+
+            <div class="adm-fl">Tier</div>
+            <select class="adm-select" id="addTier">
+                <option value="auto">Otomatis (berdasarkan harga)</option>
+                <option value="vvip">VVIP</option>
+                <option value="vip">VIP</option>
+                <option value="std">STD</option>
+            </select>
+
+            <div class="adm-fl">Link Gambar (opsional)</div>
+            <input class="adm-in" id="addImage" placeholder="https://example.com/gambar.jpg">
+
+            <button class="adm-submit" onclick="addProduct()"><i class="fas fa-save"></i> Simpan Produk</button>
+        </div>
+
+        <div id="admList"></div>
+        <button class="adm-save" onclick="saveAdm()"><i class="fas fa-database"></i> UPDATE DATABASE</button>
+    </div>
+
+    <!-- HEADER -->
+    <header>
+        <div class="logo">
+            <div class="logo-mark">YX</div>
+            <div class="logo-text">YANZ <em>XITERZ</em></div>
+        </div>
+        <div class="hdr-right">
+            <div class="live-chip"><span class="live-dot"></span>LIVE</div>
+            <button class="fp-btn" onclick="openAdm()" title="Admin"><i class="fas fa-fingerprint"></i></button>
+        </div>
+    </header>
+
+    <!-- HERO -->
+    <div class="hero-strip z1">
+        <div class="hero-inner">
+            <div class="hero-left">
+                <div class="hero-title">PREMIUM<br><span class="hl2">PRICELIST</span></div>
+                <div class="hero-sub">TRUSTED SELLER · FAST RESPON</div>
+                <div class="hero-badges">
+                    <div class="hb hb-cyan"><i class="fas fa-bolt"></i>INSTANT</div>
+                    <div class="hb hb-pink"><i class="fas fa-shield-halved"></i>AMAN</div>
+                    <div class="hb hb-gold"><i class="fas fa-star"></i>5.0 RATING</div>
+                </div>
+            </div>
+            <div class="hero-right">
+                <div class="hero-num" id="heroTotal">—</div>
+                <div class="hero-nlabel">TOTAL PRODUK</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SEARCH -->
+    <div class="s-wrap">
+        <div class="s-box">
+            <i class="fas fa-magnifying-glass"></i>
+            <input type="text" id="sInput" placeholder="Cari produk VVIP, drag, headshot...">
+            <button class="s-clear" onclick="clearSearch()"><i class="fas fa-xmark"></i></button>
+        </div>
+    </div>
+
+    <!-- CATEGORIES -->
+    <div class="ct-scroll"><div class="ct-inner" id="catNav"></div></div>
+
+    <!-- SECTION BAR -->
+    <div class="sec-bar">
+        <div class="sec-title" id="secTitle">— <span>LOADING</span></div>
+        <div class="sec-count" id="secCount">0 ITEM</div>
+    </div>
+
+    <!-- GRID -->
+    <main class="grid" id="grid"></main>
+
+    <!-- AUTHOR -->
+    <div class="author-section" id="authorSec">
+        <div class="author-card">
+            <div class="author-av">SD</div>
+            <div class="author-info">
+                <div class="author-label">Dibuat oleh</div>
+                <div class="author-name">YANZ <em>DEV</em></div>
+                <div class="author-desc">Website Resmi · Pricelist VVIP</div>
+            </div>
+            <div class="author-right">
+                <div class="author-ver">v2.0 SAPPHIRE</div>
+                <div class="author-year">© 2026 SUPRZ DEV</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- DOCK -->
+    <div class="dock">
+        <div class="dock-btns">
+            <a href="https://whatsapp.com/channel/0029Vb8Hd5t1NCrcwsUqDX0M" class="btn-testi" target="_blank">
+                <i class="fas fa-certificate"></i>
+                <span>TESTI</span>
+            </a>
+            <button class="btn-order" onclick="openOrder()">
+                <i class="fab fa-whatsapp"></i>
+                <span>ORDER SEKARANG</span>
+            </button>
+        </div>
+        <div class="dock-copy">
+            <a href="https://whatsapp.com/channel/0029Vb8Hd5t1NCrcwsUqDX0M" target="_blank">YANZ XOTERZ</a>
+            &nbsp;·&nbsp; SAPPHIRE BUILD &nbsp;·&nbsp; © 2026
+        </div>
+    </div>
+
+    <script>
+        /* ═══ ANIMATED CANVAS BG ═══ */
+        (() => {
+            const cv = document.getElementById('cv'),
+                ctx = cv.getContext('2d');
+            let W, H;
+            const resize = () => { W = cv.width = innerWidth;
+                H = cv.height = innerHeight; };
+            resize();
+            window.addEventListener('resize', resize);
+
+            const drawGrid = () => {
+                ctx.clearRect(0, 0, W, H);
+                ctx.lineWidth = 1;
+                for (let x = 0; x < W; x += 55) {
+                    ctx.strokeStyle = `rgba(0,229,255,${0.02+Math.sin(Date.now()/3000+x)*0.008})`;
+                    ctx.beginPath();
+                    ctx.moveTo(x, 0);
+                    ctx.lineTo(x, H);
+                    ctx.stroke();
+                }
+                for (let y = 0; y < H; y += 55) {
+                    ctx.strokeStyle = `rgba(179,107,255,${0.015+Math.sin(Date.now()/4000+y)*0.006})`;
+                    ctx.beginPath();
+                    ctx.moveTo(0, y);
+                    ctx.lineTo(W, y);
+                    ctx.stroke();
+                }
+                const g1 = ctx.createRadialGradient(W * .1, H * .15, 0, W * .1, H * .15, W * .45);
+                g1.addColorStop(0, 'rgba(0,229,255,0.06)');
+                g1.addColorStop(1, 'transparent');
+                ctx.fillStyle = g1;
+                ctx.fillRect(0, 0, W, H);
+                const g2 = ctx.createRadialGradient(W * .9, H * .85, 0, W * .9, H * .85, W * .4);
+                g2.addColorStop(0, 'rgba(179,107,255,0.05)');
+                g2.addColorStop(1, 'transparent');
+                ctx.fillStyle = g2;
+                ctx.fillRect(0, 0, W, H);
+            };
+
+            const pts = [];
+            for (let i = 0; i < 70; i++) pts.push(mkPt());
+
+            function mkPt() {
+                return {
+                    x: Math.random() * W,
+                    y: Math.random() * H,
+                    r: Math.random() * 1.2 + 0.2,
+                    sx: (Math.random() - .5) * .25,
+                    sy: -(Math.random() * .35 + 0.05),
+                    a: Math.random() * .5 + 0.15,
+                    col: Math.random() > .5 ? '0,229,255' : '179,107,255'
+                };
+            }
+
+            const loop = () => {
+                drawGrid();
+                pts.forEach(p => {
+                    p.x += p.sx;
+                    p.y += p.sy;
+                    if (p.y < -8) { Object.assign(p, mkPt());
+                        p.y = H + 5; }
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(${p.col},${p.a})`;
+                    ctx.fill();
+                });
+                requestAnimationFrame(loop);
+            };
+            loop();
+        })();
+
+        /* ═══ DATA ═══ */
+        const RAW = {
+            "AIM HEAD": [{ n: "BASIC", p: "5.000" }, { n: "ULTRA", p: "12.500" }, { n: "ACUZERION", p: "17.500" },
+            { n: "CELESTIAL", p: "20.000" }, { n: "VAXONIC", p: "15.000" }],
+            "AIM BOT": [{ n: "INFERNUS", p: "20.000" }, { n: "HARDNER", p: "15.500" }, { n: "GHOST V1", p: "5.000" },
+            { n: "GHOST V2", p: "10.000" }, { n: "GHOST V3", p: "15.000" }, { n: "GHOST V4", p: "20.000" },
+            { n: "GHOST V5", p: "25.000" }],
+            "AIM ON POINT TO BODY": [{ n: "ON POINT 70%", p: "8.000" }, { n: "ON POINT 80%", p: "12.000" },
+            { n: "ON POINT 90%", p: "15.000" }],
+            "AIM GOOD": [{ n: "AQUARIUS", p: "5.000" }, { n: "ZEUS", p: "8.000" }, { n: "BLESS", p: "13.000" },
+            { n: "POSEIDON", p: "16.000" }, { n: "XERPHES", p: "20.000" }],
+            "AIM LOCK BODY": [{ n: "BODY LOCK 50%", p: "2.000" }, { n: "BODY LOCK 60%", p: "3.000" },
+            { n: "BODY LOCK 70%", p: "5.000" }, { n: "BODY LOCK 80%", p: "8.000" },
+            { n: "BODY LOCK 90%", p: "10.000" }, { n: "BODY LOCK 97% V1", p: "12.500" },
+            { n: "BODY LOCK 97% V2", p: "13.000" }, { n: "BODY LOCK 97% V3", p: "15.000" },
+            { n: "BODY LOCK 100%", p: "20.000" }],
+            "AIM SERIES": [{ n: "TRACING VVIP", p: "15.500" }, { n: "MISTIC", p: "20.000" }],
+            "DRAG SHOOT": [{ n: "METEOROIT V1", p: "8.000" }, { n: "GALAKSI VIP", p: "19.500" },
+            { n: "COSMOS V2", p: "20.900" }, { n: "DRAG SHOOT", p: "13.500" }, { n: "NEBULA VIP 2", p: "25.000" },
+            { n: "JOKER VIP V3", p: "35.000" }, { n: "ZODIAC VIP V4", p: "40.000" },
+            { n: "ASTROLIGHT VVIP V5", p: "50.000" }],
+            "HEAD LOCK": [{ n: "SCORPIONS", p: "20.500" }, { n: "MAXVIONEX", p: "25.500" }, { n: "CAKRA", p: "19.500" },
+            { n: "SONIC", p: "15.500" }, { n: "QUARTZ", p: "20.000" }, { n: "PHOENIX", p: "12.000" },
+            { n: "TEMPEST", p: "25.000" }],
+            "EASY DRAG": [{ n: "BASIC", p: "5.800" }, { n: "VIP", p: "9.000" }, { n: "V1", p: "10.000" },
+            { n: "V2", p: "12.000" }, { n: "V3", p: "14.000" }, { n: "V4", p: "17.000" }, { n: "V5", p: "20.000" }],
+            "HEAD TRICK": [{ n: "VOLCANIC", p: "15.500" }, { n: "FANATIC", p: "25.000" }, { n: "PRIME HD", p: "35.000" },
+            { n: "ZYVER HD", p: "45.000" }],
+            "DRAG HEADSHOT": [{ n: "BASIC", p: "10.000" }, { n: "SONIC", p: "13.000" }, { n: "ULTIMATE", p: "16.000" },
+            { n: "RARE", p: "18.000" }, { n: "MYTHIC", p: "20.000" }],
+            "AIM SETTINGS": [{ n: "WARRIORS", p: "2.000" }, { n: "DESTROYED", p: "12.000" },
+            { n: "MISTICK", p: "15.000" }, { n: "INFERNUS", p: "20.000" }, { n: "MYCOPLASMA", p: "30.000" },
+            { n: "SUPERCHARGE", p: "32.000" }, { n: "NEOGENESIS", p: "35.000" },
+            { n: "ELECTROLYTES", p: "45.000" }],
+            "BONUS": [{ n: "STABILIZER", p: "5.000" }, { n: "AIM TO BODY", p: "8.900" },
+            { n: "PELICIN LAYAR", p: "4.000" }, { n: "WEB NOKOS", p: "2.000" }, { n: "QRIS NO KTP", p: "4.000" },
+            { n: "INJEKTOR", p: "15.000" }]
+        };
+
+        const ICONS = {
+            "AIM HEAD": "fa-crosshairs",
+            "AIM BOT": "fa-robot",
+            "AIM ON POINT TO BODY": "fa-bullseye",
+            "AIM GOOD": "fa-wand-magic-sparkles",
+            "AIM LOCK BODY": "fa-person-rifle",
+            "AIM SERIES": "fa-satellite-dish",
+            "DRAG SHOOT": "fa-meteor",
+            "HEAD LOCK": "fa-lock",
+            "EASY DRAG": "fa-hand-pointer",
+            "HEAD TRICK": "fa-fire",
+            "DRAG HEADSHOT": "fa-skull-crossbones",
+            "AIM SETTINGS": "fa-sliders",
+            "BONUS": "fa-gift"
+        };
+
+        // ----- Dynamic Categories -----
+        function getCategories() {
+            let cats = JSON.parse(localStorage.getItem('sx_cats'));
+            if (!cats || !cats.length) {
+                cats = Object.keys(RAW);
+                localStorage.setItem('sx_cats', JSON.stringify(cats));
+            }
+            return cats;
+        }
+
+        function setCategories(cats) {
+            localStorage.setItem('sx_cats', JSON.stringify(cats));
+        }
+
+        function addNewCategory(name) {
+            let cats = getCategories();
+            if (cats.includes(name)) { showToast('⚠ Kategori sudah ada'); return false; }
+            cats.push(name);
+            setCategories(cats);
+            return true;
+        }
+
+        function deleteCategory() {
+            const cats = getCategories();
+            if (!cats.length) { showToast('⚠ Tidak ada kategori'); return; }
+            const catToDelete = prompt(`Kategori yang akan dihapus:\n${cats.join(', ')}\n\nKetik nama kategori:`);
+            if (!catToDelete) return;
+            const trimmed = catToDelete.trim().toUpperCase();
+            if (!cats.includes(trimmed)) { showToast('⚠ Kategori tidak ditemukan'); return; }
+            if (!confirm(`Yakin hapus kategori "${trimmed}" beserta SEMUA produk di dalamnya?`)) return;
+            const newCats = cats.filter(c => c !== trimmed);
+            setCategories(newCats);
+            DB = DB.filter(p => p.category !== trimmed);
+            saveDB();
+            if (activeCat === trimmed) {
+                activeCat = newCats.length ? newCats[0] : '';
+            }
+            buildCats();
+            render();
+            document.getElementById('heroTotal').textContent = DB.length;
+            showToast(`🗑 Kategori "${trimmed}" dihapus`);
+        }
+
+        // ----- DB -----
+        let DB = [];
+        try { DB = JSON.parse(localStorage.getItem('sx_db_v3')) || []; } catch (e) {}
+
+        const currentCats = getCategories();
+        if (!DB.length) {
+            DB = [];
+            currentCats.forEach(cat => {
+                if (RAW[cat]) {
+                    RAW[cat].forEach(item => {
+                        DB.push({
+                            id: 'ID' + Math.random().toString(36).substr(2, 8).toUpperCase(),
+                            category: cat,
+                            name: item.n,
+                            price: item.p,
+                            img: '',
+                            tier: 'auto'
+                        });
+                    });
+                }
+            });
+            saveDB();
+        }
+
+        DB.forEach(p => { if (!p.tier) p.tier = 'auto'; });
+        saveDB();
+
+        document.getElementById('heroTotal').textContent = DB.length;
+
+        let activeCat = getCategories()[0] || '';
+
+        /* ═══ HELPERS ═══ */
+        function parsePrice(p) {
+            return parseFloat(p.replace(/\./g, '').replace(/[^0-9.]/g, ''));
+        }
+
+        function getTierClass(product) {
+            if (product.tier === 'vvip') return { cls: 't-vvip', label: 'VVIP', pc: 'pb-gold' };
+            if (product.tier === 'vip') return { cls: 't-vip', label: 'VIP', pc: 'pb-cyan' };
+            if (product.tier === 'std') return { cls: 't-std', label: 'STD', pc: 'pb-dim' };
+            // auto
+            const v = parsePrice(product.price);
+            if (isNaN(v) || !v) return { cls: 't-std', label: 'STD', pop: 30, pc: 'pb-dim' };
+            if (v >= 30000 || product.price.toLowerCase().includes('vvip')) return { cls: 't-vvip', label: 'VVIP',
+                pop: Math.min(95, 60 + (v / 1000)), pc: 'pb-gold' };
+            if (v >= 12000 || product.price.toLowerCase().includes('vip')) return { cls: 't-vip', label: 'VIP',
+                pop: Math.min(80, 40 + (v / 1000)), pc: 'pb-cyan' };
+            return { cls: 't-std', label: 'STD', pop: Math.min(60, 20 + (v / 1000)), pc: 'pb-dim' };
+        }
+
+        function stars(p) {
+            const v = parsePrice(p);
+            if (isNaN(v)) return '★★★☆☆';
+            if (v >= 40000) return '★★★★★';
+            if (v >= 25000) return '★★★★☆';
+            if (v >= 12000) return '★★★☆☆';
+            if (v >= 6000) return '★★☆☆☆';
+            return '★☆☆☆☆';
+        }
+
+        /* ═══ TOAST ═══ */
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 2200);
+        }
+
+        /* ═══ INTRO ═══ */
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('intro').classList.add('out');
+                setTimeout(() => document.getElementById('intro').style.display = 'none', 620);
+                buildCats();
+                render();
+            }, 1900);
+        });
+
+        /* ═══ CATEGORIES ═══ */
+        function buildCats() {
+            const nav = document.getElementById('catNav');
+            nav.innerHTML = '';
+            const cats = getCategories();
+            if (!cats.length) return;
+            if (!activeCat || !cats.includes(activeCat)) activeCat = cats[0];
+            cats.forEach((cat) => {
+                const el = document.createElement('div');
+                el.className = 'chip' + (cat === activeCat ? ' active' : '');
+                el.textContent = cat;
+                el.onclick = function() {
+                    document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+                    this.classList.add('active');
+                    activeCat = cat;
+                    render();
+                };
+                nav.appendChild(el);
+            });
+            populateCatDropdown();
+        }
+
+        function populateCatDropdown() {
+            const sel = document.getElementById('addCategory');
+            sel.innerHTML = '';
+            const cats = getCategories();
+            cats.forEach(cat => {
+                const opt = document.createElement('option');
+                opt.value = cat;
+                opt.textContent = cat;
+                if (cat === activeCat) opt.selected = true;
+                sel.appendChild(opt);
+            });
+        }
+
+        /* ═══ RENDER ═══ */
+        function render() {
+            const grid = document.getElementById('grid');
+            const q = document.getElementById('sInput').value.toLowerCase().trim();
+            grid.innerHTML = '';
+
+            const list = DB.filter(p => p.category === activeCat && (p.name.toLowerCase().includes(q) || q === ''));
+
+            const ws = activeCat.split(' ');
+            if (ws.length > 1) {
+                document.getElementById('secTitle').innerHTML = `— <span>${ws.slice(0,-1).join(' ')}</span> ${ws.slice(-1)[0]}`;
+            } else {
+                document.getElementById('secTitle').innerHTML = `— <span>${activeCat}</span>`;
+            }
+            document.getElementById('secCount').textContent = list.length + ' ITEM';
+
+            list.forEach((p, i) => {
+                const tierInfo = getTierClass(p);
+                const currentIcon = ICONS[p.category] || 'fa-star';
+                const imgContent = p.img ?
+                    `<img src="${p.img}" loading="lazy">` :
+                    `<div class="c-icon-wrap"><i class="fas ${currentIcon} c-icon"></i><span class="c-cat-mini">${p.category}</span></div>`;
+
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.style.animationDelay = (i * 0.045) + 's';
+                card.innerHTML = `
+              <div class="c-img">
+                ${imgContent}
+                <div class="c-img-glow"></div>
+                <div class="tier ${tierInfo.cls}">${tierInfo.label}</div>
+                <div class="pop-bar-wrap"><div class="pop-bar ${tierInfo.pc}" style="width:0%" data-w="${tierInfo.pop || 30}"></div></div>
+              </div>
+              <div class="c-body">
+                <div class="c-meta">${p.category}</div>
+                <div class="c-name">${p.name}</div>
+                <div class="c-row">
+                  <div class="c-price-wrap">
+                    <div class="c-plabel">HARGA</div>
+                    <div class="c-price">Rp ${p.price}</div>
+                  </div>
+                  <div class="c-stars">${stars(p.price)}</div>
+                </div>
+                <button class="c-btn" onclick="buyWA('${p.name.replace(/'/g,"\\'")}','${p.price}')">
+                  <i class="fab fa-whatsapp"></i><span>ORDER</span>
+                </button>
+              </div>`;
+                grid.appendChild(card);
+            });
+
+            requestAnimationFrame(() => {
+                document.querySelectorAll('.pop-bar[data-w]').forEach(b => {
+                    setTimeout(() => { b.style.width = b.dataset.w + '%'; }, 200);
+                });
+            });
+
+            document.getElementById('authorSec').style.display = list.length ? 'block' : 'none';
+        }
+
+        /* ═══ ORDER ═══ */
+        function buyWA(name, price) {
+            const phone = "6283800220815";
+            const msg = `*HALO ADMIN YANZ XOTERZ*\n` +
+                `━━━━━━━━━━━━━━━━━━━\n` +
+                `*Produk:* ${name}\n` +
+                `*Harga:* Rp ${price}\n` +
+                `━━━━━━━━━━━━━━━━━━━\n` +
+                `Saya ingin memesan, bagaimana pembayarannya?`;
+            window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`, '_blank');
+        }
+
+        function openOrder() {
+            const phone = "6283800220815";
+            const msg = `*HALO ADMIN YANZ XITERZ*\n` +
+                `━━━━━━━━━━━━━━━━━━━\n` +
+                `Saya ingin memesan produk dari SUPRZ XITERZ.\n` +
+                `Tolong info katalog terbaru ya!\n` +
+                `━━━━━━━━━━━━━━━━━━━`;
+            window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`, '_blank');
+        }
+
+        /* ═══ SEARCH ═══ */
+        document.getElementById('sInput').addEventListener('input', render);
+
+        function clearSearch() {
+            document.getElementById('sInput').value = '';
+            render();
+        }
+
+        /* ═══ ADMIN — LOGIN ═══ */
+        const ADMIN_PASSWORD = "yanzking122";
+
+        function openAdm() {
+            const pw = prompt("MASUKKAN PASSWORD ADMIN:");
+            if (pw === ADMIN_PASSWORD) {
+                document.getElementById('adm').style.display = 'block';
+                renderAdmList();
+                populateCatDropdown();
+                document.getElementById('addForm').classList.remove('open');
+            } else if (pw !== null) {
+                showToast("⚠ PASSWORD SALAH");
+            }
+        }
+
+        function closeAdm() {
+            document.getElementById('adm').style.display = 'none';
+            render();
+        }
+
+        /* ═══ ADMIN — CRUD ═══ */
+        function toggleAddForm() {
+            const f = document.getElementById('addForm');
+            f.classList.toggle('open');
+            if (f.classList.contains('open')) {
+                document.getElementById('addName').value = '';
+                document.getElementById('addPrice').value = '';
+                document.getElementById('addImage').value = '';
+                document.getElementById('addTier').value = 'auto';
+                document.getElementById('addCategory').value = activeCat;
+                document.getElementById('addName').focus();
+            }
+        }
+
+        function renderAdmList() {
+            const el = document.getElementById('admList');
+            el.innerHTML =
+                `<p style="font-family:var(--F3);font-size:0.6rem;letter-spacing:3px;color:var(--c1);margin-bottom:16px;text-transform:uppercase;">Kategori: ${activeCat}</p>`;
+            DB.filter(p => p.category === activeCat).forEach(p => {
+                const d = document.createElement('div');
+                d.className = 'adm-item';
+                d.innerHTML = `
+              <button class="adm-del" onclick="deleteProduct('${p.id}')"><i class="fas fa-trash-can"></i> Hapus</button>
+              <div class="adm-fl">Nama Produk</div>
+              <input class="adm-in" id="n-${p.id}" value="${p.name.replace(/"/g,'&quot;')}">
+              <div class="adm-fl">Harga</div>
+              <input class="adm-in" id="p-${p.id}" value="${p.price}">
+              <div class="adm-fl">Tier</div>
+              <select class="adm-tier-select" id="t-${p.id}">
+                <option value="auto" ${p.tier==='auto'?'selected':''}>Otomatis</option>
+                <option value="vvip" ${p.tier==='vvip'?'selected':''}>VVIP</option>
+                <option value="vip" ${p.tier==='vip'?'selected':''}>VIP</option>
+                <option value="std" ${p.tier==='std'?'selected':''}>STD</option>
+              </select>
+              <div class="adm-fl">Link Gambar (opsional)</div>
+              <input class="adm-in" id="i-${p.id}" value="${p.img}" placeholder="https://...">`;
+                el.appendChild(d);
+            });
+        }
+
+        function deleteProduct(id) {
+            if (!confirm('Yakin hapus produk ini?')) return;
+            DB = DB.filter(p => p.id !== id);
+            saveDB();
+            renderAdmList();
+            document.getElementById('heroTotal').textContent = DB.length;
+            showToast('🗑 Produk dihapus');
+        }
+
+        function addProduct() {
+            const cat = document.getElementById('addCategory').value;
+            const name = document.getElementById('addName').value.trim();
+            const price = document.getElementById('addPrice').value.trim();
+            const img = document.getElementById('addImage').value.trim();
+            const tier = document.getElementById('addTier').value;
+
+            if (!name) { showToast('⚠ Nama produk wajib diisi'); return; }
+            if (!price) { showToast('⚠ Harga wajib diisi'); return; }
+            if (!/^\d+(\.\d{3})*$/.test(price) && !/^\d+$/.test(price)) {
+                showToast('⚠ Format harga salah. Contoh: 25.000');
+                return;
+            }
+
+            let formattedPrice = price;
+            if (!price.includes('.')) {
+                const num = parseInt(price, 10);
+                if (!isNaN(num)) {
+                    formattedPrice = num.toLocaleString('id-ID');
+                }
+            }
+
+            const newProd = {
+                id: 'ID' + Math.random().toString(36).substr(2, 8).toUpperCase(),
+                category: cat,
+                name: name,
+                price: formattedPrice,
+                img: img || '',
+                tier: tier
+            };
+
+            DB.push(newProd);
+            saveDB();
+            document.getElementById('heroTotal').textContent = DB.length;
+            renderAdmList();
+            document.getElementById('addForm').classList.remove('open');
+            showToast('✓ Produk berhasil ditambahkan!');
+            if (cat === activeCat) render();
+        }
+
+        function addCategory() {
+            const name = prompt('Masukkan nama kategori baru:');
+            if (!name) return;
+            const trimmed = name.trim().toUpperCase();
+            if (!trimmed) { showToast('⚠ Nama tidak boleh kosong'); return; }
+            if (addNewCategory(trimmed)) {
+                showToast(`✓ Kategori "${trimmed}" ditambahkan`);
+                buildCats();
+                activeCat = trimmed;
+                document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+                document.querySelectorAll('.chip').forEach(c => {
+                    if (c.textContent === trimmed) c.classList.add('active');
+                });
+                render();
+            } else {
+                showToast('⚠ Kategori sudah ada');
+            }
+        }
+
+        function saveAdm() {
+            DB.forEach(p => {
+                const n = document.getElementById(`n-${p.id}`);
+                const pr = document.getElementById(`p-${p.id}`);
+                const im = document.getElementById(`i-${p.id}`);
+                const t = document.getElementById(`t-${p.id}`);
+                if (n && pr && im && t) {
+                    p.name = n.value;
+                    p.price = pr.value;
+                    p.img = im.value;
+                    p.tier = t.value;
+                }
+            });
+            saveDB();
+            showToast("✓ DATABASE UPDATED");
+            closeAdm();
+        }
+
+        function saveDB() {
+            localStorage.setItem('sx_db_v3', JSON.stringify(DB));
+        }
+    </script>
+</body>
+</html>
