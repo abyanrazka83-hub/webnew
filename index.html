@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>YANZXITER | WEB OTOMATIS + PUSH NOTIF</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-logo">YANZXITER</div>
+        <div class="loading-spinner"></div>
+        <div style="margin-top: 20px; font-weight: 700; letter-spacing: 2px; opacity: 0.8;">LOADING SYSTEM...</div>
+    </div>
+
+    <video autoplay muted loop playsinline id="bgVideo">
+        <source src="https://files.catbox.moe/zei4ye.mp4" type="video/mp4">
+    </video>
+    <div class="video-fallback"></div>
+
+    <!-- Tombol Testi Floating -->
+    <a href="https://whatsapp.com/channel/0029Vb8Hd5t1NCrcwsUqDX0M" target="_blank" class="testi-btn">
+        <i class="fas fa-star"></i> TESTIMONI
+    </a>
+
+    <!-- Chat AI Floating -->
+    <div class="ai-chat-container" id="aiChatContainer">
+        <div class="ai-chat-header">
+            <span><i class="fas fa-robot"></i> YANZ AI ASSISTANT</span>
+            <button id="closeChatBtn"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="ai-chat-body" id="aiChatBody">
+            <div class="ai-msg">Halo! Saya asisten Yanz. Ada yang bisa saya bantu?</div>
+        </div>
+        <div class="ai-chat-footer">
+            <div class="ai-options">
+                <button class="ai-opt-btn" data-q="1">Cara beli file?</button>
+                <button class="ai-opt-btn" data-q="2">Apa itu file?</button>
+                <button class="ai-opt-btn" data-q="3">Apakah aman?</button>
+            </div>
+        </div>
+    </div>
+    <button class="ai-toggle-btn" id="aiToggleBtn">
+        <i class="fas fa-comment-dots"></i> TANYA AI
+    </button>
+
+    <div class="sound-control" id="soundControl">
+        <i id="soundIcon" class="fas fa-volume-mute"></i>
+        <span id="soundText">Mute</span>
+    </div>
+
+    <div class="content-overlay">
+        <div id="appMain" class="app-main">
+            <div class="hero-glow">
+                <h1>YANZXITER OFFICIAL</h1>
+                <div class="badge-ob53">👑 ALL FILE GACOR • DISKON OB53 👑</div>
+                <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; margin-top: 1rem;">
+                    <a href="https://t.me/yanzking122" target="_blank" class="contact-badge"><i class="fab fa-telegram"></i> Telegram</a>
+                    <a href="https://wa.me/6283800220815" target="_blank" class="contact-badge"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+                </div>
+                <div style="margin-top: 20px; font-weight: 600; opacity: 0.8;"><i class="fas fa-bolt" style="color: #ffdd00;"></i> FAST RESPON • AMAN • GACOR</div>
+            </div>
+
+            <div class="visitor-panel">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px; width: 100%; margin-bottom: 16px;">
+                    <div class="stat-card" style="background: linear-gradient(135deg, rgba(255, 150, 100, 0.3), rgba(255, 100, 150, 0.3)); border: 2px solid rgba(255, 150, 100, 0.4);"><i class="fas fa-eye" style="color: #ffaa66;"></i> <span id="visitorCount" style="color: #ffaa66;">0</span> <small style="display:block; font-size:0.75rem; opacity:0.8; margin-top: 4px;">Hari Ini</small></div>
+                    <div class="stat-card" style="background: linear-gradient(135deg, rgba(100, 200, 255, 0.3), rgba(100, 150, 255, 0.3)); border: 2px solid rgba(100, 200, 255, 0.4);"><i class="fas fa-users" style="color: #66ccff;"></i> <span id="onlineCount" style="color: #66ccff;">0</span> <small style="display:block; font-size:0.75rem; opacity:0.8; margin-top: 4px;">Online</small></div>
+                    <div class="stat-card" style="background: linear-gradient(135deg, rgba(200, 100, 255, 0.3), rgba(150, 100, 255, 0.3)); border: 2px solid rgba(200, 100, 255, 0.4);"><i class="fas fa-chart-line" style="color: #cc99ff;"></i> <span id="totalVisitor" style="color: #cc99ff;">0</span> <small style="display:block; font-size:0.75rem; opacity:0.8; margin-top: 4px;">Total</small></div>
+                    <div class="stat-card" style="background: linear-gradient(135deg, rgba(76, 255, 158, 0.3), rgba(100, 255, 150, 0.3)); border: 2px solid rgba(76, 255, 158, 0.5);"><i class="fas fa-shopping-cart" style="color: #4cff9e;"></i> <span id="totalBuyers" style="color: #4cff9e;">432</span> <small style="display:block; font-size:0.75rem; opacity:0.8; margin-top: 4px; color: white;">Pembeli</small></div>
+                </div>
+                <div class="admin-status-card" style="width: 100%; justify-content: center;">
+                    <i class="fas fa-user-shield" style="font-size: 20px;"></i>
+                    <div style="font-size: 0.95rem; font-weight: 900; letter-spacing: 0.5px;">STATUS ADMIN: <span id="adminStatusText" style="margin-left: 8px;">...</span></div>
+                </div>
+            </div>
+
+            <div style="display: flex; justify-content: center; gap: 15px; margin-bottom: 2.5rem; flex-wrap: wrap;">
+                <button id="scrollToExplanationBtn" class="btn-explanation blink-btn">
+                    <i class="fas fa-info-circle"></i> PENJELASAN PENTING <i class="fas fa-arrow-down"></i>
+                </button>
+                <a href="https://whatsapp.com/channel/0029Vb8Hd5t1NCrcwsUqDX0M" target="_blank" class="btn-testi-inline">
+                    <i class="fas fa-check-circle"></i> CEK TESTIMONI
+                </a>
+            </div>
+
+            <!-- CATEGORIES GRID (3 COLUMNS) -->
+            <div id="categoriesGridContainer" class="categories-grid"></div>
+
+            <div id="explanationSection" class="explanation-section">
+                <div style="font-size:1.5rem; text-align:center; margin-bottom:2rem; color:#ffdd99; font-weight:900; letter-spacing: 1px;">💡 PENJELASAN FITUR</div>
+                <div id="explanationGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem;"></div>
+            </div>
+
+            <footer style="text-align: center;">
+                <div style="font-weight: 800; margin-bottom: 10px;">YANZXITERZ OFFICIAL STORE © 2024</div>
+                <div>✨ KLIK KATEGORI → PILIH FILE → TF KE DANA → KONFIRMASI ✨</div>
+            </footer>
+        </div>
+
+        <!-- MODALS -->
+        <div id="productListModal" class="product-modal">
+            <div class="product-modal-card" style="width: 90%; max-width: 550px; padding: 2.5rem;">
+                <div style="text-align: center; margin-bottom: 1.5rem;">
+                    <h3 id="modalCategoryTitle" style="font-size: 1.6rem; font-weight: 900; background: linear-gradient(to bottom, #fff, #aaa); -webkit-background-clip: text; color: transparent;">Kategori</h3>
+                </div>
+                <div id="productModalItems" style="max-height: 450px; overflow-y: auto; padding-right: 10px;"></div>
+                <div style="text-align: center;">
+                    <button class="close-product-modal" id="closeProductModalBtn"><i class="fas fa-times"></i> Tutup</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
